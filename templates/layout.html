@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+
+  <body class="main_body" style="background-color:white;">
+    <div class="site_pic">
+        <label>
+           <a class="side_menu_items" href="{{ url_for('feed') }}"> 
+                <image class="lks"  src="{{url_for('static',filename = 'imgs/links.png')}}" >
+                </a>
+          </label>
+      </div>
+<!-- Nav BAR-->
+    <div class="topbar">
+        <label class="top_bar_items">
+            
+            <a class="no_under" href="{{ url_for('feed') }}"> 
+                <i class="fa fa-home fa-3x"></i> </a> Home
+        </label>
+
+        <label class="top_bar_items" >
+            
+            <a class="no_under" href="{{ url_for('post') }}">
+                <i class="fa fa-user-circle fa-3x"></i> 
+              </a>Post
+        </label>
+
+        <label class="top_bar_items" >
+            <a class="no_under" href="{{ url_for('profile') }}">
+                <i class="fa fa-pencil-square fa-3x"></i>  
+             </a>
+             Profile
+        </label>
+
+    </div>
+<!-- SIDE BAR-->
+    <div class="side_nav">
+
+        <label class="side_items">
+            
+            <a  href="{{ url_for('feed') }}"  class="no_under">  
+                <i class="fa fa-home fa-3x"></i>   Home 
+            </a>
+        </label>
+        <br>
+        <br>
+        
+
+        <label class="side_items">
+            
+            <a  href="{{ url_for('post') }}" class="no_under"> 
+                <i class="fa fa-user-circle fa-3x"></i> Post
+            </a>
+                
+        </label>
+        <br>
+        <br>
+
+        <label class="side_items">
+             
+            <a  href="{{ url_for('profile') }}" class="no_under"> 
+                <i class="fa fa-pencil-square fa-3x"></i> Profile
+            </a>
+                
+        </label>
+
+
+    </div>
+
+<!-- MAIN CONTAINER-->
+<div class="container">
+    {% block body %}
+    
+    {% endblock %}
+</div>
+
+
+
+<div class="footer">
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<div class="login-container">
+    <div class="login-banner">
+    Welcome 
+    </div>
+    <form method="POST" action=  "/login/">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="formr">
+        <label for="username">Username
+            <br>
+        <input name="email" type="email" required class="inputs" Placeholder="Email">
+    </label>
+      <br>
+      <br>
+      <label for="password">Password
+        <br>
+        <input name="passcode" type="password" required class="inputs"  Placeholder="Password">
+    </label>
+
+    <label>
+         <br>
+         <br>   
+        <button type="submit" class="vis_button"> Log In</button>
+           
+        </a>
+            
+    </label>
+
+    
+</form>
+<br>
+<br>
+
+<a href="{{ url_for('register') }}" > <button class="vis_button"> Sign Up</button> </a>
+        <br>
+        <br>
+
+        Forgot Password?
+        <br>
+        <br>
+         <a href="{{ url_for('reset_pass') }}" > Request New Password</a>.
+
+        </div>
+
+
+</div>
+
+
+
+
+
+{%endblock%}

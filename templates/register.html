@@ -1,0 +1,66 @@
+
+
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<div class="login-container">
+    <div class="login-banner">
+    Welcome 
+    </div>
+    <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data"   >
+  
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <div >
+    <input name="email"  placeholder="Email" type="email" class="inputs">
+    <br>
+    <br>
+    </div>
+    
+    <input name="username"  placeholder="Username" type="text" class="inputs">
+    <br>
+    <br>
+    
+    <input name="passc"   placeholder="Password" type="password" class="inputs">
+    <br>
+    <br>
+    <input name="passc2"    placeholder="Confirm Password" type="password" class="inputs">
+    <br>
+    <br>
+    
+    <div class="image-upload">
+        <label for="file-input">
+          <img id="previewImg" src="{{ url_for('static', filename='/imgs/kano.jpg') }}" class="profile_banner" />
+          <input id="file-input" name="img" type="file" required onchange="previewFile(this);" style="display: none;" />
+        </label>
+      </div>
+      
+      <script>
+        function previewFile(input) {
+          var file = input.files[0];
+      
+          if (file) {
+            var reader = new FileReader();
+      
+            reader.onload = function() {
+              document.getElementById("previewImg").src = reader.result;
+            };
+      
+            reader.readAsDataURL(file);
+          }
+        }
+      </script>
+      
+    <br>
+    <br>
+    
+    
+        <button type="submit"  class="vis_button" >Register</button>
+    </form>
+
+
+
+
+
+{%endblock%}
