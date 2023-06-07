@@ -1006,7 +1006,7 @@ def trs():
 
 
 if __name__ == "__main__":
-    application.secret_key = "Fuckoffmen"
+    application.secret_key = "Fucddggdgdfgdfgdfgkdkgdfkgdkfgdkfmen"
     application.run(debug = True , port = 5006)
 
     

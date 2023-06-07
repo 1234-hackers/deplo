@@ -15,13 +15,14 @@
     <div class="site_pic">
         <label>
            <a class="side_menu_items" href="{{ url_for('feed') }}"> 
+            
                 <image class="lks"  src="{{url_for('static',filename = 'imgs/links.png')}}" >
                 </a>
           </label>
       </div>
 <!-- Nav BAR-->
     <div class="topbar">
-        <label class="top_bar_items">
+        <label class="top_bar_items1">
             
             <a class="no_under" href="{{ url_for('feed') }}"> 
                 <i class="fa fa-home fa-3x"></i> </a> Home
@@ -30,13 +31,14 @@
         <label class="top_bar_items" >
             
             <a class="no_under" href="{{ url_for('post') }}">
-                <i class="fa fa-user-circle fa-3x"></i> 
+                <i class="fa fa-plus fa-3x"  aria-hidden="true"></i>
+
               </a>Post
         </label>
 
         <label class="top_bar_items" >
             <a class="no_under" href="{{ url_for('profile') }}">
-                <i class="fa fa-pencil-square fa-3x"></i>  
+                <i class="fa fa-pencil-square fa-3x" style="color:red;"></i>  
              </a>
              Profile
         </label>
@@ -82,7 +84,10 @@
     
     {% endblock %}
 </div>
+<div class="container_right">
+tydndgskjdgshdgsh
 
+</div>
 
 
 <div class="footer">

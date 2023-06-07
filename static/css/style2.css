@@ -1,5 +1,6 @@
 .site_pic{
-    margin-top: 70px;
+    margin-top: 0px;
+    margin-top: 90px;
     margin-left: 70px;
     border-radius: 5px;
     }
@@ -14,15 +15,43 @@
     width: 90px;
     height: 45px;
     margin-left: 0px;
+    border-radius: 50%;
 }
+.site_namz
+{
+    font-size: 40px;
+    margin-top: 90px;
+    margin-left: 70px;
+    text-decoration: none;
+
+}
+.pst{
+    border-radius: 0%;
+}
+
+.login-container{
+    width: 500px;
+}
+
+
+.container_right
+{
+    float: right;
+    margin-right: 0px;
+    position: relative;
+    display: none;
+
+}
+
 
 .side_nav{
     color: black;
-    top: 200px;
+    top: 150px;
     position: fixed;
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    margin-left: 30px;
+    width: 200px;
     
 
 
@@ -41,6 +70,8 @@ display: block;
 text-decoration: none;
 
 }
+.n{text-decoration: none;
+text-transform: capitalize;}
     @media screen and (max-width: 640px) {
         .side_items {
             width: 100%;
@@ -58,14 +89,15 @@ text-decoration: none;
     top: 20px;
     display: flex;
     flex-direction: row;
-    margin-left: 350px;
+    margin-left: 0px;
     float: left;
     margin-right: auto;
+    border-bottom: black solid 1px;
+    width: 100%;
 
     }
     @media screen and (max-width: 600px) {
     .topbar{
-        visibility: hidden;
         position: absolute;
         top: 20px;
         display: flex;
@@ -81,19 +113,33 @@ text-decoration: none;
     margin-left: 100px;
 }
 
+.top_bar_items1{
+    display: flex;
+    flex-direction: column;
+    margin-left: 350px;
+    }
+    @media screen and (max-width: 600px) {
+        .top_bar_items1{
+            display: flex;
+            flex-direction: column;
+            margin-left: 100px;
+            }
+        }   
+
 
 
 
 .owner_pic
 {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
 }
 
 .post_pic
 {
-width: 700px;
+width: 480px;
+height: 300px;
 border-radius: 4px;
 }
 @media screen and (max-width: 600px) {
@@ -104,6 +150,7 @@ border-radius: 4px;
     }
 }
 .name{
+    margin-top: 7px;
     margin-left: 3px;
     color: blue;
     bottom:0px;
@@ -114,27 +161,30 @@ border-radius: 4px;
     display: inline-flex;
 }
 
-.main_container
-{
-position: relative;
-top: 100px;
-width: 700px;
 
-margin: auto;
-
-}
-@media screen and (max-width: 600px) {
-    .main_container {
-        
-        width: 100%;
-
-    }
-    }
 
 .posts{
-
-margin-bottom: 10px;   
-}
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border:black solid 1px;
+    border-radius: 7px 0  7px -10px rgb(53, 49, 49); /* Specify the border radius value */
+    padding-left: 1px;
+    margin-bottom: 0px; 
+    padding-right: -1px;  
+    }
+    @media screen and (max-width: 640px) {
+        .posts{
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border-top-left-radius: 4px;
+        border: black solid 1px;
+        border-radius: 7px 0  7px -10px rgb(53, 49, 49); /* Specify the border radius value */
+        padding-left: 1px;
+        margin-bottom: 0px; 
+        padding-right: -1px;  
+        }
+    }
 
 @media screen and (max-width: 640px) {
     .sub_btn{
@@ -193,19 +243,17 @@ margin-bottom: 10px;
     }
 
 .owner{
-    margin-left: 200px;
-    margin-top: 130px;
-    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-bottom: 5px;
 
     }
 
     @media screen and (max-width: 600px) {
     .owner{
-        margin-left: 30px;
+        margin-left: 5px;
         margin-right: auto;
-        margin-top: 100px;
-        margin-bottom: 20px;
-    
+        margin-bottom: 2px;
+       
         }
 
     }
@@ -451,3 +499,32 @@ margin-bottom: 10px;
     height: 55px;
     margin-bottom: 8px;
 }
+
+/*Main Page*/
+.home_cont{
+
+    margin-left: 320px;
+    width: 500px;
+    }
+    @media screen and (max-width: 600px) {
+        .home_cont{
+
+            margin-left: 0px;
+            width: 500px;
+            }
+        
+
+    }
+.form_cl{
+    margin-top: 5px;
+    color: black;
+
+    }
+    @media screen and (max-width: 600px) {
+        
+    .form_cl{
+        margin-top: 3px;
+        color: black;
+    }
+
+    }
