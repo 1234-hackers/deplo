@@ -1,0 +1,122 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+<div class="home_cont">
+
+ 
+<img class="profile_users2" src = "{{nn}}"  >
+<br>
+
+{{obj.username}}
+
+        <br>
+<button class="sub_btn"> <a href="{{ url_for('my_post') }}" style="text-decoration: none; color: aliceblue;"> Posts </button></a>
+<hr class="d">
+        <p/>
+
+        <br>
+        
+
+
+  <div align="center">
+<p class="heads">
+    Edit Profile Here
+</p>
+    <form method="POST" action= "{{ url_for('profile') }}"  enctype="multipart/form-data"> 
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <br>
+
+
+      <label for="file-input">
+        <img id="previewImg" src = "{{nn}}" class="profile_users3" style="background-image: url(img/pr.png);" />
+      </label>
+  <br>
+      <input id="file-input" name="img" type="file"  onchange="previewFile(this);" style="display: none;" />
+   
+   
+    
+    <script>
+      function previewFile(input) {
+        var file = input.files[0];
+    
+        if (file) {
+          var reader = new FileReader();
+    
+          reader.onload = function() {
+            document.getElementById("previewImg").src = reader.result;
+          };
+    
+          reader.readAsDataURL(file);
+        }
+      }
+    </script>
+
+
+
+
+<br>
+    <input class="sub_btn"  style="text-decoration: none; color: aliceblue;" type="submit" name="sub" value="Change">
+    <br>
+        
+        <br>
+        Username <br>
+        <input class="inputs" type="text" name = "username"  placeholder = "{{inf.username}}"  >
+        <br>
+        <br>
+      
+    
+        <input class="sub_btn" type="submit"  name="sub" value="Update" >
+    </form>
+
+<div class="tags">
+
+<form name="view" method="POST" action="{{ url_for('topics') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>  
+    <br>
+    {%for x in tags%}
+        <input type="submit" name="sub" class="sub_btn" value="{{x}}">
+    {% endfor %}
+    </form>
+</div>
+
+
+
+  {%for x in more%}
+
+  <div class="posts">
+     <div class="owner">
+         <img class="owner_pic" src = "{{x.imz}}">
+         <div class="name">
+             {{x.owner_name}}
+         </div>
+         
+     </div>
+     <div class="desc">
+         {{x.description}}  
+     </div>
+
+     <img class="post_pic" src = "{{x.ima }}" >
+     <div class="form_cl">
+      {{x.link}}
+      <br>
+             <div  class="owner">
+              <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>
+                 <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                 <div class="name">
+                     {{x.total_likes}}
+                 </div>
+                 
+             </div>
+            
+     </div>
+   
+     </div>
+     {%endfor%}
+
+
+</div>
+</div>
+</div>
+
+{%endblock%}

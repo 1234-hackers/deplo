@@ -1,0 +1,31 @@
+
+{% extends "layout.html"%}
+
+{%block body%}
+<div class="home_cont">
+<h3>
+    {{m}}
+    </h3>
+    
+    {%for x in favss%}
+    {{x.owner_name}}
+    <br>
+    <br>
+    {{x.title}}
+    <br>
+    <br>
+    {{x.link}}
+    <br>
+    <br>
+     <form name="view" method="POST" action="{{ url_for('saved') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="id"  value="{{x.post_id}}">  
+        <input type="submit" name="sub" class="sub_btn" value="View">
+        <input type="submit" name="sub" class="sub_btn" value="Remove">
+    
+        </form>
+    {%endfor%}
+
+</div>
+
+ {%endblock%}

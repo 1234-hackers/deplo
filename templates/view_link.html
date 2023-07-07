@@ -4,11 +4,86 @@
 <div class="home_cont">
 
 
+    <div class="owner">
+            
+        <img class="owner_img" src = "{{item.imz}}">
+        <br>
+        <div class="det">
+            {{  item.owner }}
+            <br>
+        12:44hrs EAT
+        </div>
+    </div>
+    <div class="image_clouser">
+        <div class="details">
+            {{item.description}}
+        </div>
+        <div class="">
+            <img class="post_image"  src = "{{item.ima}}">
+        </div>
+        <div class="form_cl">
+                  
+        <form name="view" method="POST" action="{{ url_for('view_link') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="id" value="{{item.post_id}}" valuex="view">
+           
+            <label>
+                <img src="{{url_for('static',filename = 'imgs/sv1.jpg')}}" width="25" height="25">
+                <input type="submit" name="sub" class="sub_btn" value="Save" style="display:none ;">
+            </label>
+
+            
+            <label>
+                <img src="{{url_for('static',filename = '/imgs/pr.png')}}" width="25" height="25">
+                <input type="submit" name="sub" class="sub_btn" value="Save" style="display:none ;">
+            </label>
+            <br>
+
+            <input type="text" name="comm" class="inputs" Placeholder="Write a Comment" >
+             
+            <label>
+                <img src="{{url_for('static',filename = '/imgs/pr.png')}}" width="25" height="25">
+                <input type="submit" name="sub" class="sub_btn" value="Comment" style="display:none ;" >
+            </label>
+          
+            </form>
+
+        </div>
+        
+    </div>
+   
+
+<button class="sub_btn" id="openDrawerBtn"> reports </button>
+
+<div class="drawer" id="myDrawer">
+    {%for n in item.comments[:5]%}
+    {% for  key, value in n.items() %}
+ <div class="clause">
+<h4 class="key" >{{key}}</h4> 
+<h4 class="value"> {{value}}</h4>
+ </div>
+{%endfor%}
+{%endfor%}
+</div>
+
+
+
 
       
     </div>
 
 
 
+    <script>
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            var openDrawerBtn = document.getElementById("openDrawerBtn");
+            var myDrawer = document.getElementById("myDrawer");
+          
+            openDrawerBtn.addEventListener("click", function() {
+              myDrawer.classList.toggle("open");
+            });
+          });
+      </script>
 
 {%endblock%}

@@ -7,7 +7,7 @@
     <div class="login-banner">
     Welcome 
     </div>
-    <form method="POST" action=  "/login/">
+    <form method="POST" action=  "/">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="formr">
         <label for="username">Username
@@ -35,14 +35,14 @@
 <br>
 <br>
 
-<a href="{{ url_for('register') }}" > <button class="vis_button"> Sign Up</button> </a>
+<a href="{{ url_for('register') }}" style="text-decoration: none;"> Sign Up </a>
         <br>
         <br>
 
         Forgot Password?
         <br>
         <br>
-         <a href="{{ url_for('reset_pass') }}" > Request New Password</a>.
+         <a href="{{ url_for('reset_pass') }}" style="text-decoration: none;" > Request New Password</a>
 
         </div>
 

@@ -1,0 +1,41 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<div class="login-container">
+<h2>  My Posts</h2>
+
+<br>
+{%for x in posts%}
+
+<h3> {{x.title}}</h3>
+<img src="{{x.ima}}" class="my_post_pic" alt="">
+<br>
+ {{x.description}}
+<br>
+<br>
+Link {{x.link}}
+<br>
+
+<br>
+<form name="view" method="POST" action="{{ url_for('my_post') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="the_id" value="{{x.post_id}}" valuex="view">  
+    <input type="submit" class="sub_btn" name="sub" value="Edit">
+    <input type="submit" class="sub_btn" name="sub" onchange="loadFile(event)" value="Delete">
+
+
+    </form>
+<br>
+<br>
+{%endfor%}
+
+    
+    </div>
+   
+
+
+
+
+{%endblock%}

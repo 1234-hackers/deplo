@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
   <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
@@ -11,12 +11,12 @@
   </head>
 
 
-  <body class="main_body" style="background-color:white;">
+  <body class="main_body"  style="background-color:rgb(226, 226, 232); width: fit-content;">
     <div class="site_pic">
         <label>
            <a class="side_menu_items" href="{{ url_for('feed') }}"> 
             
-                <image class="lks"  src="{{url_for('static',filename = 'imgs/links.png')}}" >
+                <image class="lks"  src="{{url_for('static',filename = 'imgs/ce.png')}}" >
                 </a>
           </label>
       </div>
@@ -25,26 +25,31 @@
         <label class="top_bar_items1">
             
             <a class="no_under" href="{{ url_for('feed') }}"> 
-                <i class="fa fa-home fa-3x"></i> </a> Home
+                <i class="fa fa-home fa-3x" style="color:rgb(20, 20, 78)"></i> </a> Home
         </label>
 
         <label class="top_bar_items" >
             
             <a class="no_under" href="{{ url_for('post') }}">
-                <i class="fa fa-plus fa-3x"  aria-hidden="true"></i>
+                <i class="fa fa-plus fa-3x" style="color:rgb(20, 20, 78)"  aria-hidden="true"></i>
 
               </a>Post
         </label>
 
         <label class="top_bar_items" >
             <a class="no_under" href="{{ url_for('profile') }}">
-                <i class="fa fa-pencil-square fa-3x" style="color:red;"></i>  
+                <i class="fa fa-pencil-square fa-3x" style="color:rgb(20, 20, 78)"></i>  
              </a>
              Profile
         </label>
+        
 
     </div>
+
+
+<!-- main container starts here -->
 <!-- SIDE BAR-->
+<div class="main_container">
     <div class="side_nav">
 
         <label class="side_items">
@@ -79,20 +84,16 @@
     </div>
 
 <!-- MAIN CONTAINER-->
-<div class="container">
+<div class="middle">
     {% block body %}
     
     {% endblock %}
-</div>
-<div class="container_right">
-tydndgskjdgshdgsh
+
+
 
 </div>
-
-
-<div class="footer">
-
 </div>
 
 </body>
+
 </html>

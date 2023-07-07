@@ -11,7 +11,7 @@ import passlib
 from passlib.context import CryptContext
 from passlib.hash import bcrypt_sha256,argon2,ldap_salted_md5,md5_crypt
 import time
-from datetime import timedelta , datetime
+from datetime import  datetime as dt
 import smtplib
 from email.message import EmailMessage
 import socket,os
@@ -22,7 +22,7 @@ from bson import ObjectId
 from flask_wtf import RecaptchaField,FlaskForm
 from wtforms import *
 from wtforms.validators import EqualTo, InputRequired
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect,CSRFError
 from wtforms.csrf.session import SessionCSRF 
 from datetime import timedelta
 import email_validator 
@@ -33,7 +33,7 @@ from bson.binary import Binary
 from werkzeug.utils import secure_filename
 #mpsa imports
 #from flask_mpesa import MpesaAPI
-
+import pyshorteners
 import PIL
 from PIL import Image
 
@@ -95,7 +95,19 @@ def login_required(f):
             return redirect(url_for('home'))
     return wrap
 
-        
+
+
+
+def handle_csrf_error(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if not f == "":
+            return render_template('index.html', error=f), 400
+        else:
+            time.sleep(2)
+            return redirect(url_for('home'))
+    return wrap
+            
 def re_sess(f):
     @wraps(f)
     def wrap(*args,**kwargs):
@@ -158,7 +170,6 @@ def reset_session_required(f):
             return redirect(url_for('reset_pass'))
     return wrap
 @application.route('/reset_pass/', methods = ['POST','GET'])
-
 def  reset_pass():
     reset_db = mongo.db.pass_reset
     code = random.randint(145346 , 976578)
@@ -170,11 +181,12 @@ def  reset_pass():
             '''
             Send message here with the code
             '''
-            now = datetime.now()
+            now = dt.now()
             r_now =  now.strftime("Date  %Y:%m:%d: Time %H:%M:%S")
             session['rset'] = email
-            reset_db.insert_one({"email" : email , "code" : code , "time_in" : r_now})
-            return redirect(url_for("enter_code"))      
+            if not reset_db.find_one({"email" : email}):
+                reset_db.insert_one({"email" : email , "code" : code , "time_in" : r_now})
+            return redirect(url_for('enter_code'))      
         else:
             return redirect(url_for('register'))
     return render_template('reset_pass.html')
@@ -182,57 +194,65 @@ def  reset_pass():
 
 def enter_code():
     email = session['rset']
-    if email in session:
+    if "x" =="x":
         if request.method == "POST":
             reset_db = mongo.db.pass_reset
             code = request.form['code']
-            mailed = email
             legit = reset_db.find_one({"email" : email})
             if legit:
                 legit_code = legit["code"]
-                now = datetime.now()
+                now = dt.now()
                 now = now.strftime("Date  %Y:%m:%d: Time %H:%M:%S")
                 req_time = legit['time_in']
-                diff = now - req_time
-                if code == legit_code and diff < 7:
+                def timez():
+                    now = dt.now()
+                    now3 = now.strftime("Date  %Y:%m:%d: Time %H:%M:%S")
+                    cr = str(now3)[23:28]
+                    first_min = cr[3:5]
+                    first_hour = cr[0:2]
+
+                    cr2 = str(req_time)[23:28]
+                    second_min = cr2[3:5]
+                    second_hour = cr2[0:2]
+
+                    dif = int(second_min) - int(first_min)
+                    hours = int(first_hour) - int(second_hour)
+                    if dif < 0:
+                        dif = dif + 60
+                    return dif
+                    
+                diff =timez()
+                if code == legit_code:
+                    reset_db.find_one_and_delete({'email' : email})
                     return redirect(url_for('peopleass'))  
-                if diff > 7:
+                else:
                     return redirect(url_for('reset_pass' ))
-            else:
-                return redirect(url_for('reset_pass'))
-    else:
-        return redirect(url_for('reset_pass'))
+
             
     return render_template('enter_code.html')
      
-class peopleass(Base_form):
       
-        pass1 = PasswordField("Password" , [validators.Length(min = 8 , max = 15 , message = "Minimum Length Is 8 Characters")]) 
-           
-        pass2 = PasswordField("Confirm Password" , [validators.Length(min = 8,max=15 , message="8 To 15 Characters") , EqualTo("passc",message="Must Be Same To The Input Above") , InputRequired()])
-        
-        
 
 @application.route('/peopleass/' , methods = ['POST','GET'])
 @login_required
-def peopleass(email):
-    form = peopleass()
-    if request.method == "POST" and form.validate():
+def peopleass():
+    email = session['rset']
+    if request.method == "POST":
         users = mongo.db.users
         target_account = session['rset'] 
-        pass1 = form.pass1.data
-        pass2 = form.pass2.data
-        if pass1 == pass2 and len(pass2) > 8 and len(pass2) < 15 :
+        pass1 = request.form['pas1']
+        pass2 = request.form['pas2']
+        if pass1 == pass2:
             passcode = Hash_passcode.hash(pass2)
             the_user = users.find_one({"email" : email})
-            users.find_one_and_update({"email" :target_account} , { 'set' : {"password" : passcode} })
+            users.find_one_and_update({"email" :target_account} , { '$set' : {"password" : passcode} })
             session['login_user'] = target_account
-            return redirect(url_for('main'))
+            return redirect(url_for('feed'))
         else:
             check_pass = " Please Check The Password And Try Again"
-            return render_template('peopleass.html' , form = form , mess = check_pass)
+            return render_template('new_pass.html', mess = check_pass)
             
-    return render_template('peopleass.html' , form = form)
+    return render_template('new_pass.html' , form = form)
 
 
 class Base_form(FlaskForm):
@@ -258,9 +278,9 @@ def login():
                     username = existing_user['username']
                     if username in session:
                         fa = existing_user['tags']
-                        if len(fa) < 5:
+                        if len(fa) < 5  :
                              return redirect(url_for('choose_tags'))
-                        if v == 0:
+                        elif not v == 0:
                             return redirect(url_for('complete_regist'))
                         else:
                             return redirect(url_for('feed'))
@@ -335,24 +355,27 @@ def register():
             favs = []
             tags = []
             users.insert_one({"email":email ,'username':username , "password":hashed , 
-                             "favs" : favs , "tags" : tags , "verified" :0 , 'saved' : [] })
+                             "favs" : favs , "tags" : tags , "verified" :0 , 'saved' : [], "viewed" :[]  })
             
             if users.find_one({"email":email}):
                 code = random.randint(145346 , 976578)
                 code = str(code)
                 session['login_user'] = email
-                verif.insert_one({"email" : email , "code" : code })
-                #send the code Here
+                if not verif.find_one({"email" : email}):
+                    verif.insert_one({"email" : email , "code" : code })
+                    #send the code Here
+                    return redirect(url_for('complete_regist'))
+                else:
+                    return redirect(url_for('complete_regist'))
+                    
                 
-                return redirect(url_for('complete_regist'))
+                
     return render_template('register.html')
 
 class complete_regist(Base_form):
     code = StringField("Verification Code" , [validators.InputRequired(message="Please Enter The Code Sent Via Email")])
 
 @application.route('/complete_regist' , methods = ['POST' , 'GET'])
-@login_required
-@re_sess
 def complete_regist():
     verif = mongo.db.verify_email
     user_email = session['login_user']
@@ -405,6 +428,7 @@ def choose_tags():
 @application.route('/feed/' , methods = ['POST','GET'])
 @login_required
 def feed():
+    session.pop('viewing', None)
     link_db = mongo.db.links
     em = link_db.find()
     user = mongo.db.users
@@ -443,28 +467,36 @@ def feed():
                     arr1.append(x)        
     render_array.extend(arr1)
     random.shuffle(render_array)
-    
+    for x in render_array:
+        views = x['viewed']
+        idn = x['_id']
+        new = int(views)
+        new_val = new + 1
+        link_db.find_one_and_update({"_id" : idn} ,{ '$set' :  {"viewed": new_val}} )
+
         
     #view link functionality
     if request.method == "POST":
-        the_id = request.form['id']
-        if request.form['sub'] == "View": 
-            session["linky"] = the_id
-            the_post = link_db.find_one({"post_id" : the_id})
-            likes= the_post['likes']
-            total_likes = len(likes)
-            clicker = session['login_user']
-            if clicker in likes:
-                likes.remove(clicker)
-                total_likes = len(likes)
-                link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"likes": likes  , 'total_likes' : total_likes }} )
-                return redirect(url_for('view_link' ))
+        return redirect(url_for('feed'))
+
+    #     the_id = request.form['id']
+    #     if request.form['sub'] == "View": 
+    #         session["linky"] = the_id
+    #         the_post = link_db.find_one({"post_id" : the_id})
+    #         likes= the_post['likes']
+    #         total_likes = len(likes)
+    #         clicker = session['login_user']
+    #         if clicker in likes:
+    #             likes.remove(clicker)
+    #             total_likes = len(likes)
+    #             link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"likes": likes  , 'total_likes' : total_likes }} )
+    #             #return redirect(url_for('view_link' ))
                 
-            else:
-                likes.append(clicker) 
-                total_likes = len(likes)
-                link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"likes": likes  , 'total_likes' : total_likes}} )
-                return redirect(url_for('view_link' ))
+    #         else:
+    #             likes.append(clicker) 
+    #             total_likes = len(likes)
+    #             link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"likes": likes  , 'total_likes' : total_likes}} )
+    #             #return redirect(url_for('view_link' ))
             
         
         
@@ -626,11 +658,11 @@ def profile():
     fl = email.replace("." , "")
     info = user.find_one({"email" : user_email})
     if request.method == "POST":
-        
-        if request.form['sub'] == "Update Profile Picture":
+        if request.form['sub'] == "Change":
             image = request.files['img']
-            os.remove('static/images/' + fl)
-            filename = image.filename
+            if image is not None:
+                #os.remove('static/images/' + fl)
+                filename = image.filename
             if allowed_file(filename): 
                 os.mkdir("static/images/" + fl)
                 pt = "static/images/" + fl + "/"
@@ -648,14 +680,15 @@ def profile():
                 return redirect(url_for('feed'))
         
         
-        if request.form['sub'] == "Update Username":
+        if request.form['sub'] == "Update":
             name = request.form['username']
             if not name == info['username']:
                 if not name == "":
                     users.find_one_and_update({"email" : user_email} ,{ '$set' :  {"username":name}})
                     return redirect(url_for('feed'))
              
-    
+        return render_template('profile.html' , me = me , favs = emps , tags = tags , mine = minez ,
+                           more = more_posts , links = links , prof = dez_name , nn = nnn ,obj = acc ,inf = info )
         
                       
     return render_template('profile.html' , me = me , favs = emps , tags = tags , mine = minez ,
@@ -683,14 +716,15 @@ def saved():
         de_render.append(the_post)
     if request.method == "POST":
         the_id = request.form['id']
-        if request.form['sub'] == "View Link": 
+        if request.form['sub'] == "View": 
             session["linky"] = the_id
             return redirect(url_for('view_link' ))
         
         if request.form['sub'] == "Remove":
             the_id = request.form['id']
-            favss.remove(the_id)
-            users.find_one_and_update({'email' : user_email} , {'$set' :  {'saved':favss}})
+            if the_id in favss:
+                favss.remove(the_id)
+                users.find_one_and_update({'email' : user_email} , {'$set' :  {'saved':favss}})
 
     return render_template('saved.html' , favss = de_render , m = m )
 
@@ -740,7 +774,7 @@ def view_prof():
             else:
                 f.remove(the_id)
                 state = "Follow"
-                users.find_one_and_update({'email' : user_email} , {'set' : {'favs' : f}})
+                users.find_one_and_update({'email' : user_email} , {'$set' : {'favs' : f}})
                 return render_template('view_prof.html' , usr = the_user, pic = nnn , state = state , posts = all_em_posts)
                 
  
@@ -764,18 +798,23 @@ def view_link():
     user = mongo.db.users
     user_email = session['login_user']
     the_user = users.find_one({"email" : user_email})
-    de_name = the_user['username']
+    viewed = the_user['viewed']
+    
+    de_name = str(the_user['username'])
     if request.method == "POST":
         the_id = request.form['id']
-        words = request.form['comm']
         if request.form['sub'] == "Comment":
+                newx = []
+                words = request.form['comm']
                 the_post = link_db.find_one({"post_id" : the_id})
                 comments = the_post['comments']
                 commentz = {de_name : words}
-                if not words =="":
-                    comments.append(commentz)
-                    link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"comments": comments}} )
-  
+                if not words =="" :
+                    if not commentz in comments:
+                        comments.append(commentz)
+                        link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"comments": comments}} )
+                else:
+                    return redirect(url_for('view_link'))
         if request.form['sub'] == "View Profile": 
             the_id = request.form['id']
             fou = link_db.find_one({"post_id" : the_id})
@@ -878,11 +917,15 @@ def post():
         post_id = md5_crypt.hash(title)
             
         tag1 = request.form['tag1']
-        
-        tag2 = request.form['tag2']
 
-        tag_arr = []
-        
+
+        shortener = pyshorteners.Shortener()
+        try:
+            url = shortener.tinyurl.short(link)
+        except:
+            url = link
+        else:
+            url = link
         
         
         
@@ -896,26 +939,36 @@ def post():
             th.save("static/images/" + filename)
             image1 = "static/images/"  + filename
             image = Image.open(image1)
-            image2 = image.resize((500,500),Image.ANTIALIAS)
-            new = image2.convert("RGB")
-            new.save( "static/images/" + da_name + '.jpg')
+            width = image.size[0]
+            heig = image.size[1]
+            if int(width) < int(heig):
+                rotated = image.rotate(-40)
+            else:
+                rotated = image
+            #image2 = image.resize((500,500),Image.ANTIALIAS)
+            rotated = image.convert("RGB")
+            rotated.save( "static/images/" + da_name + '.jpg')
             image = da_name + '.jpg'
             to_db =  "/static/images/" + image
-        
-        tag_arr.append(tag1)
-        tag_arr.append(tag2)
+        tag_arr =[]
+        tag_arr2 = tag1.split()
+        for x in tag_arr2:
+            tag_arr.append(x)
         owner = session['login_user']
         wner_name = users.find_one({'email' : owner})
         owner_name = wner_name['username']
         like_arr = [owner]
         comments = []
-        now = datetime.now()
+        viewed = random.randint(5,10)
+        
+        now = dt.now()
         now_c = now.strftime("Time  %Y:%m:%d: , %H:%M:%S")
         timez = now_c
+        
         fl = owner.replace("." , "")
         fjp  = fl + ".jpg"
         imz = "/static/images/"+fl +"/" + fjp
-        link_db.insert_one({"owner" : owner , "link" : link ,  "likes" : like_arr , "comments" : comments ,
+        link_db.insert_one({"owner" : owner , "link" : url ,  "likes" : like_arr , "comments" : comments , "viewed": viewed,
                             "tags" : tag_arr , "title" : title , "description" : desc , "post_id" : post_id ,
                             'owner_name' : owner_name , 'ima': to_db , 'time' : timez , 'imz' : imz})
         return redirect(url_for('feed'))
@@ -937,15 +990,8 @@ def my_post():
     for x in my_posts:
         tos.append(x)
    
-    if os.path.exists("static/images/" + me2 +"/" + me2 +".jpg"):
-        prof_pic = "static/images/" + me2 +"/" + me2 +".jpg" 
-      
-    else:
-        prof_pic = "/static/images/default.jpg"
-    
-    dez_name = Markup(prof_pic)
-    nnn =   "/static/images/" + me2 +"/" + me2 +".jpg" 
-    noz = my_posts.count()
+   
+    noz = len(tos)
         
     if request.method == "POST":
         if request.form['sub'] == "Edit":
@@ -956,9 +1002,13 @@ def my_post():
         if request.form['sub'] == "Delete":
             id = request.form['the_id']
             link_db.find_one_and_delete({"post_id" : id})
-            return render_template('my_post.html' , posts = tos)
+            my_posts2 = link_db.find({"owner" : me})
+            new = []
+            for x in my_posts2:
+                new.append(x) 
+            return render_template('my_post.html' , posts = new ,no = noz , dude = this_guy )
          
-    return render_template('my_post.html' , posts = tos ,no = noz , dude = this_guy , ppic = nnn)
+    return render_template('my_post.html' , posts = tos ,no = noz , dude = this_guy)
 
 @application.route('/edit_post/' ,methods = ['POST','GET'])
 @login_required
@@ -979,16 +1029,30 @@ def edit_post():
         
         if not de_link  == "":
             link = de_link
+        else:
+            link = link
         if not de_ttle =="":
             title = de_ttle
+        else:
+            title = title
         if not de_desc =="":
             desc = de_desc
+        else:
+            desc = desc
         if not de_tags =="":
             tags = de_tags
             tags = tags.split(",")
+            
+        else:
+            tags = []
+            for x in the_post['tags']:
+                tags.append(x)
+                
+
    
-            link_db.find_one_and_update({"post_id" : da_id } , { '$set' :  {"link" : link ,"title" : title , "description" : desc, "tags" : tags}})  
-            return redirect(url_for('my_post'))
+        link_db.find_one_and_update({"post_id" : da_id } , { '$set' :  {"link" : link ,"title" : title ,
+            "edited" : "Modified", "description" : desc, "tags" : tags}})  
+        return redirect(url_for('my_post'))
     
     return render_template('edit_post.html' , post = the_post)
     
@@ -1005,8 +1069,38 @@ def trs():
     return render_template("ep.html")
 
 
+@application.route('/topics/' , methods = ['POST' , 'GET'])
+def topics():
+
+    try:
+        if request.method == "POST":
+            rend = []
+            the_topic = request.form['sub']
+            rele = link_db.find().limit(100)
+            for x in rele:
+                y = x['tags']
+                if the_topic in y:
+                    rend.append(x)
+                desc = x['description']
+                if the_topic in desc:
+                    if not x in rend:
+                        rend.append(x)
+                        
+                if len(rend) < 1:
+                    trending_db = mongo.db.links
+                    rend2 = trending_db.find().limit(15)
+                    return render_template("topics.html" , t = rend2)
+            redirect(url_for('topics'))
+
+    except UnboundLocalError as xz:
+        return redirect(url_for('feed'))
+
+    return render_template("topics.html" , t = rend)
+
+
+
 if __name__ == "__main__":
-    application.secret_key = "Fucddggdgdfgdfgdfgkdkgdfkgdkfgdkfmen"
+    application.secret_key = "Fucddggdgdfdgdrer5677u"
     application.run(debug = True , port = 5006)
 
     

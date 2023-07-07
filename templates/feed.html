@@ -1,7 +1,9 @@
 {% extends "layout.html"%}
 
 {%block body%}
+
 <div class="home_cont">
+   
     {%for x in arr%}
 
     <div class="posts">
@@ -13,35 +15,74 @@
            
        </div>
        <div class="desc">
-           {{x.description}}  
+           {{x.description}} <div class="edited"> {{x.edited}} </div>
        </div>
 
-       <img class="post_pic" src = "{{x.ima }}">
+       <img class="post_pic" src = "{{x.ima }}" >
        <div class="form_cl">
-
-           <form method="POST" action="{{ url_for('feed') }}">
-               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-               <input type="hidden" name="id" value="{{x.post_id}}">  
-
-               <div class="owner">
-                   <input type="submit" class="sub_btn"  name="sub" value="View">
+        {{x.link}}
+        <br>
+               <div  class="owner">
+                <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>
                    <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
                    <div class="name">
-                       22
+                       {{x.viewed}}
                    </div>
                    
                </div>
-               </form>
               
        </div>
      
        </div>
+    
+      
+<!--     
+<script>
+
+    var floater = document.getElementById("drawer");
+    var the_button = document.getElementById("formbtn") 
+    var close = document.getElementById("close")
+    the_button.addEventListener("click",function(){floater.classList.add("open");
+    });
+
+    close.addEventListener("click",function(){floater.classList.remove("open");
+    });
+    
+   
+
+    var image_rotate = document.getElementById("imzz");
+    function rotate_img(){
+        var currentt_r = getComputedStyle(image_rotate).getPropertyValue("transform");
+        var values = currentt_r.split('(')[1].split(')')[0].split(',');
+        var a = values[0];
+        var b = values[1];
+        var c = values[2];
+        var d = values[1];
+        var angle = Math.round(Math.atan2(b,a) *(180/Math.PI)) + 90;
+        image_rotate.style.transform = "rotate(" + angle +"deg)";
+        
+    }
+    image_rotate.addEventListener("load",function(){
+        var wid = this.naturalWidth;
+        var len = this.naturalHeight;
+        if (wid > len){
+            rotate_img()
+        }
+    });
+
+</script> -->
+       
 
 
        {%endfor%}
-    </div>
 
 
+       
+   
 
+
+        </div>
+     
+   
 
 {%endblock%}

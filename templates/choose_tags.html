@@ -6,15 +6,21 @@
              
 <div align="center">
 
-    {% for x in tags%}
+    
 
     <form name="view" method="POST" action="{{ url_for('choose_tags') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <br>
+        <div class="em_tgs">
+        {% for x in tags%}
+        <label>
+            
+            <input type="checkbox" name="tags" value="{{x}}" style="display: none;">  
 
-        {{x}}<input type="checkbox" name="tags" value="{{x}}" >
-        
+       <h2 class="tag_names">  {{x}}</h2>
+    </label>
         {%endfor%}
+    </div>
 <br>
 <br>
         <button type="submit" >Done</button>
