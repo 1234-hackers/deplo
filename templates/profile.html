@@ -12,6 +12,7 @@
 
         <br>
 <button class="sub_btn"> <a href="{{ url_for('my_post') }}" style="text-decoration: none; color: aliceblue;"> Posts </button></a>
+
 <hr class="d">
         <p/>
 
@@ -68,7 +69,7 @@
     
         <input class="sub_btn" type="submit"  name="sub" value="Update" >
     </form>
-
+    <button class="sub_btn"> <a href="{{ url_for('logout') }}" style="text-decoration: none; color: aliceblue;"> Exit </button></a>
 <div class="tags">
 
 <form name="view" method="POST" action="{{ url_for('topics') }}">

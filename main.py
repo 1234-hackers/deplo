@@ -36,9 +36,11 @@ from werkzeug.utils import secure_filename
 import pyshorteners
 import PIL
 from PIL import Image
-
+import asyncio
 import markupsafe
 from markupsafe import escape , Markup
+
+from postmarker.core import PostmarkClient
 ip = socket. gethostbyname(socket. gethostname())
 ipst = str(ip)
 application = Flask(__name__)
@@ -75,7 +77,7 @@ client = MongoClient('localhost', 27017)
 db_pic = client.users
 gfs = GridFS(db_pic)
 
-application.permanent_session_lifetime = timedelta(days=30)
+application.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 Hash_passcode = CryptContext(schemes=["sha256_crypt" ,"des_crypt"],sha256_crypt__min_rounds=131072)
 
@@ -92,7 +94,7 @@ def login_required(f):
             return f(*args,**kwargs,)
         else:
             time.sleep(2)
-            return redirect(url_for('home'))
+            return redirect(url_for('login'))
     return wrap
 
 
@@ -118,46 +120,21 @@ def re_sess(f):
             return redirect(url_for('login'))
     return wrap
     
-class Base_form(Form):
-    
-    class Meta:
-        csrf = False
-        csrf_class = SessionCSRF
-        csrf_secret = 'EPj00jpfj8Gx1SjndfgdgdgdfgdfgyLxwBBSQfnQ9DJYe0Ym'
-        csrf_time_limit = timedelta(minutes=20)
-        
            
 @application.route('/',methods = ["POST","GET"])
 def home():
-    if request.method == "POST":# and hcaptcha.verify():
-        email = request.form['email']
-        existing_user  = users.find_one({'email':email} )
-        if existing_user:
-                passcode = request.form['passcode']
-                v = str(existing_user['verified'])
+  
+    pops = ['musk' ,'python','gaming' ]
+    r = link_db.find({}).limit(500)
+    to_show = []
+    em = []
+    for x in pops:
+        for one_post in r:
+            em.append(one_post)
+            if x in one_post['tags']:
+                to_show.append(x)
 
-                existing_pass = existing_user['password']
-                if Hash_passcode.verify(passcode,existing_pass):
-                    username = existing_user['username']
-                    if username in session:
-                        fa = existing_user['tags']
-                        if len(fa) < 5:
-                             return redirect(url_for('choose_tags'))
-                        if v == 0:
-                            return redirect(url_for('complete_regist'))
-                        else:
-                            return redirect(url_for('feed'))
-                    else:    
-                        session_time = request.form.get("session_time") 
-                        if  session_time == 2:
-                            session.parmanent = True
-                        session['login_user'] = email
-                        fa = existing_user['tags']
-                        if len(fa) < 5:
-                            return redirect(url_for('choose_tags'))
-                        else:    
-                            return redirect(url_for('feed'))   
-    return render_template("index.html")
+    return render_template("landing.html",arr = em)
 
 
 def reset_session_required(f):
@@ -178,7 +155,17 @@ def  reset_pass():
         email = request.form['email']
         existing = users.find_one({'email':email} )
         if existing:
+
             '''
+            postmark = PostmarkClient(server_token='POSTMARK-SERVER-API-TOKEN-HERE')
+
+# Send an email
+postmark.emails.send(
+  From='sender@example.com',
+  To='recipient@example.com',
+  Subject='Postmark test',
+  HtmlBody='HTML body goes here'
+)
             Send message here with the code
             '''
             now = dt.now()
@@ -255,39 +242,29 @@ def peopleass():
     return render_template('new_pass.html' , form = form)
 
 
-class Base_form(FlaskForm):
-    
-    class Meta:
-        csrf = True 
-        csrf_class = SessionCSRF 
-        csrf_secret = b"cffhgfghfgjgherydumbo"
-        csrf_time_limit = timedelta(minutes=25)
-                   
+                  
 @application.route('/login/' , methods = ['POST','GET'])
 def login():
- 
     if request.method == "POST":# and  hcaptcha.verify():
         email = request.form['email']
         existing_user  = users.find_one({'email':email} )
         if existing_user:
                 passcode = request.form['passcode']
+                v = str(existing_user['verified'])
 
                 existing_pass = existing_user['password']
-                v = str(existing_user['verified'])
-                if Hash_passcode.verify(passcode,existing_pass)  :
+                if Hash_passcode.verify(passcode,existing_pass):
                     username = existing_user['username']
                     if username in session:
                         fa = existing_user['tags']
-                        if len(fa) < 5  :
+                        if len(fa) < 5:
                              return redirect(url_for('choose_tags'))
-                        elif not v == 0:
+                        if v == 0:
                             return redirect(url_for('complete_regist'))
                         else:
                             return redirect(url_for('feed'))
                     else:    
-                        session_time = request.form.get("session_time") 
-                        if  session_time == 2:
-                            session.parmanent = True
+                        session.parmanent = True
                         session['login_user'] = email
                         fa = existing_user['tags']
                         if len(fa) < 5:
@@ -371,9 +348,6 @@ def register():
                 
                 
     return render_template('register.html')
-
-class complete_regist(Base_form):
-    code = StringField("Verification Code" , [validators.InputRequired(message="Please Enter The Code Sent Via Email")])
 
 @application.route('/complete_regist' , methods = ['POST' , 'GET'])
 def complete_regist():

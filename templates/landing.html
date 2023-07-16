@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+
+  <body class="main_body"  style="background-color:rgb(226, 226, 232); width: fit-content;">
+<div class="landing_home">
+    <div class="left_login">  
+
+        <label class="top_bar_items1">
+            
+            <a class="no_under" href="{{ url_for('register') }}"> 
+                <i class="fa fa-sign-in fa-2x" style="color:rgb(20, 20, 78)"></i> </a> Join
+        </label>
+
+
+        <label class="top_bar_items1">
+            
+            <a class="no_under" href="{{ url_for('login') }}"> 
+                <i class="fa fa-user fa-2x" style="color:rgb(20, 20, 78)"></i> </a> Login
+        </label>
+
+
+    </div>
+    
+    
+    <!-- MAIN CONTAINER-->
+    <div class="middle1">
+        <div class="middle">
+            <div class="home_cont">
+           
+                {%for x in arr%}
+            
+                <div class="posts">
+                   <div class="owner">
+                       <img class="owner_pic" src = "{{x.imz}}">
+                       <div class="name">
+                           {{x.owner_name}}
+                       </div>
+                       
+                   </div>
+                   <div class="desc">
+                       {{x.description}} <div class="edited"> {{x.edited}} </div>
+                   </div>
+            
+                   <img class="post_pic" src = "{{x.ima }}" >
+                   <div class="form_cl">
+                    {{x.link}}
+                    <br>
+                           <div  class="owner">
+                            <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home" onclick="openIframe()" > Read</button></a>
+                               <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                               <div class="name">
+                                   {{x.viewed}}
+                               </div>
+                               
+                           </div>
+                          
+                   </div>
+  
+  <script>
+    function openIframe() {
+    var lik = "{{x.link}}"
+        
+      var iframe = document.createElement('iframe');
+      iframe.src = lik  // Replace with your desired URL
+      iframe.width = '500';
+      iframe.height = '300';
+      document.body.appendChild(iframe);
+    }
+  </script>
+                   </div>
+                   {%endfor%}
+                    </div>
+        </div>
+    
+    
+    </div>
+
+</div>
+
+<script>
+    setTimeout(function() {
+  window.location.href = "{{ url_for('login') }}"; // Replace with the desired URL
+}, 300000); // Replace 5000 with the desired delay in milliseconds (e.g., 5000 for 5 seconds)
+
+</script>
+</body>
+</html>

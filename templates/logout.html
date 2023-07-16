@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+
+  <body class="main_body"  style="background-color:rgb(226, 226, 232);  width: fit-content;">
+    <div class="site_pic">
+        <label>
+           <a class="side_menu_items" href="{{ url_for('feed') }}"> 
+            
+                <image class="lks"  src="{{url_for('static',filename = 'imgs/ce.png')}}" >
+                  <br>
+                  
+                </a>
+          </label>
+  
+                  <p style="text-decoration: none; font-size: 19px;">
+                  Links
+                </p>
+      </div>
+<!-- Nav BAR-->
+ 
+
+<!-- MAIN CONTAINER-->
+<div class="middle">
+   
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="home_cont">
+
+
+<div align="center">
+
+
+      <div style="font-size: 19px;">
+        Are You Sure You Want To Log Out
+        </div>
+    <form name="view" method="POST" action="{{ url_for('logout') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <br>
+      <br>
+        <input type="submit" value="Yes" name="sub" class="sub_btn">
+        <input type="submit"class="sub_btn" name="sub"  value="No">
+    
+    </form>
+
+
+</div>
+</div>
+
+
+
+
+
+
+</div>
+</div>
+
+</body>
+
+</html>

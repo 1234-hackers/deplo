@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Button that opens an iframe</title>
+</head>
+<body>
+  <button onclick="openIframe()">Open Iframe</button>
+  
+  <script>
+    function openIframe() {
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.example.com';  // Replace with your desired URL
+      iframe.width = '500';
+      iframe.height = '300';
+      document.body.appendChild(iframe);
+    }
+  </script>
+</body>
+</html>
