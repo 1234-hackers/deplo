@@ -10,20 +10,25 @@
 
     <form name="view" method="POST" action="{{ url_for('choose_tags') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <br>
+     
         <div class="em_tgs">
         {% for x in tags%}
-        <label>
+       
+        <label class="onc">
             
-            <input type="checkbox" name="tags" value="{{x}}" style="display: none;">  
+            <input type="checkbox"name="tags" value="{{x}}" style="display: none;">  
 
-       <h2 class="tag_names">  {{x}}</h2>
+       <h2 class="tag_names" >  {{x}}</h2>
+
     </label>
+ 
+        </script>
         {%endfor%}
     </div>
 <br>
+
 <br>
-        <button type="submit" >Done</button>
+        <button type="submit" class="sub_btn" >Done</button>
     
         </form>
 
@@ -31,6 +36,7 @@
 
 </div>
 </div>
+
 
 
 

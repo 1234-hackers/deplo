@@ -31,14 +31,14 @@
         <label class="top_bar_items" >
             
             <a class="no_under" href="{{ url_for('post') }}">
-                <i class="fa fa-plus fa-3x" style="color:rgb(20, 20, 78)"  aria-hidden="true"></i>
+                <i class="fa fa-pencil-square-o fa-3x" style="color:rgb(20, 20, 78)"  aria-hidden="true"></i>
 
               </a>Post
         </label>
 
         <label class="top_bar_items" >
             <a class="no_under" href="{{ url_for('profile') }}">
-                <i class="fa fa-pencil-square fa-3x" style="color:rgb(20, 20, 78)"></i>  
+                <i class="fa fa-odnoklassniki fa-3x" style="color:rgb(20, 20, 78)"></i>  
              </a>
              Profile
         </label>
@@ -55,7 +55,9 @@
         <label class="side_items">
             
             <a  href="{{ url_for('feed') }}"  class="no_under">  
-                <i class="fa fa-home fa-3x"></i>   Home 
+                <i class="fa fa-home fa-3x" style="color:rgb(20, 20, 78)"></i> 
+                <h3 style="font-weight: bold;"> Home</h3>
+              
             </a>
         </label>
         <br>
@@ -65,7 +67,8 @@
         <label class="side_items">
             
             <a  href="{{ url_for('post') }}" class="no_under"> 
-                <i class="fa fa-user-circle fa-3x"></i> Post
+                <i class="fa fa-pencil-square-o fa-3x" style="color:rgb(20, 20, 78)"  aria-hidden="true"></i>
+                <h3 style="font-weight: bold;"> Post</h3>
             </a>
                 
         </label>
@@ -75,7 +78,8 @@
         <label class="side_items">
              
             <a  href="{{ url_for('profile') }}" class="no_under"> 
-                <i class="fa fa-pencil-square fa-3x"></i> Profile
+                <i class="fa fa-odnoklassniki fa-3x" style="color:rgb(20, 20, 78)"></i> 
+                 <h3 style="font-weight: bold;"> Profile</h3>
             </a>
                 
         </label>

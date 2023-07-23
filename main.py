@@ -69,7 +69,7 @@ csrf = CSRFProtect(application)
 #mongoDB configs
 application.config['MONGO_DBNAME'] = 'users'
 # application.config['MONGO_URI'] = 'mongodb://'+ipst+':27017/users'
-application.config['MONGO_URI'] = 'mongodb://localhost:27017/users'
+application.config['MONGO_URI'] = 'mongodb://localhost:27017/main'
 
 mongo = PyMongo(application)
 
@@ -221,7 +221,6 @@ def enter_code():
       
 
 @application.route('/peopleass/' , methods = ['POST','GET'])
-@login_required
 def peopleass():
     email = session['rset']
     if request.method == "POST":
@@ -960,11 +959,16 @@ def my_post():
     
     
     my_posts = link_db.find({"owner" : me})
+    
     tos = []
     for x in my_posts:
         tos.append(x)
-   
-   
+    ll = len(tos)
+    if ll  < 1:
+        mess = "You Dont Have Any Posts"
+    else:
+        mess = "Manage Your posts"
+
     noz = len(tos)
         
     if request.method == "POST":
@@ -982,7 +986,7 @@ def my_post():
                 new.append(x) 
             return render_template('my_post.html' , posts = new ,no = noz , dude = this_guy )
          
-    return render_template('my_post.html' , posts = tos ,no = noz , dude = this_guy)
+    return render_template('my_post.html' , posts = tos ,no = noz , dude = this_guy, mess= mess)
 
 @application.route('/edit_post/' ,methods = ['POST','GET'])
 @login_required
@@ -999,8 +1003,8 @@ def edit_post():
         title = the_post['title']
         desc= the_post['description']
            
-        
-        
+        older_tags = the_post['tags']
+        tags_arr = []
         if not de_link  == "":
             link = de_link
         else:
@@ -1015,17 +1019,16 @@ def edit_post():
             desc = desc
         if not de_tags =="":
             tags = de_tags
-            tags = tags.split(",")
-            
+            new_tags = tags.split(",")
+            for x in new_tags:
+                tags_arr.append(x)  
         else:
-            tags = []
-            for x in the_post['tags']:
-                tags.append(x)
+            de_t = older_tags
                 
 
-   
+        de_t = tags_arr + older_tags
         link_db.find_one_and_update({"post_id" : da_id } , { '$set' :  {"link" : link ,"title" : title ,
-            "edited" : "Modified", "description" : desc, "tags" : tags}})  
+            "edited" : "Modified", "description" : desc, "tags" : de_t}})  
         return redirect(url_for('my_post'))
     
     return render_template('edit_post.html' , post = the_post)

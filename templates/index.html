@@ -1,6 +1,32 @@
-{% extends "layout.html"%}
 
-{%block body%}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+
+  <body class="main_body"  style="background-color:rgb(226, 226, 232); width: fit-content;">
+    <div class="site_pic">
+        <label>
+           <a class="side_menu_items" href="{{ url_for('feed') }}"> 
+            
+                <image class="lks"  src="{{url_for('static',filename = 'imgs/ce.png')}}" >
+                </a>
+               
+          </label>
+          <br>
+          Links
+      </div>
+<!-- Nav BAR-->
+
 
 
 <div class="login-container">
@@ -18,7 +44,7 @@
       <br>
       <label for="password">Password
         <br>
-        <input name="passcode" type="password" required class="inputs"  Placeholder="Password">
+        <input name="passcode" type="password" maxlength="50" minlength="8" required class="inputs"  Placeholder="Password">
     </label>
 
     <label>
@@ -49,8 +75,6 @@
 
 </div>
 
+</body>
 
-
-
-
-{%endblock%}
+</html>
