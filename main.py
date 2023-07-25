@@ -123,7 +123,6 @@ def re_sess(f):
            
 @application.route('/',methods = ["POST","GET"])
 def home():
-  
     pops = ['musk' ,'python','gaming' ]
     r = link_db.find({}).limit(500)
     to_show = []
@@ -133,7 +132,7 @@ def home():
             em.append(one_post)
             if x in one_post['tags']:
                 to_show.append(x)
-
+    random.shuffle(em)
     return render_template("landing.html",arr = em)
 
 
@@ -256,10 +255,12 @@ def login():
                     username = existing_user['username']
                     if username in session:
                         fa = existing_user['tags']
-                        if len(fa) < 5:
-                             return redirect(url_for('choose_tags'))
-                        if v == 0:
+                        if v == 0 :
                             return redirect(url_for('complete_regist'))
+                        if len(fa) < 5 and v ==1 :
+                             return redirect(url_for('choose_tags'))
+                        if len(fa) > 5 and v == 0 :
+                             return redirect(url_for('complete_regist'))
                         else:
                             return redirect(url_for('feed'))
                     else:    
@@ -330,6 +331,7 @@ def register():
             mess = "Registerd Successfully" 
             favs = []
             tags = []
+           
             users.insert_one({"email":email ,'username':username , "password":hashed , 
                              "favs" : favs , "tags" : tags , "verified" :0 , 'saved' : [], "viewed" :[]  })
             
@@ -473,7 +475,7 @@ def feed():
             
         
         
-                        
+    random.shuffle(render_array)                 
     return render_template('feed.html' , arr = render_array , fav = fav_arr , email = user_email )
 
 @application.route('/search/' , methods = ['POST','GET'])
@@ -599,7 +601,9 @@ def profile():
         de_name = users.find_one({'email': x})['username']
         emps.append(de_name)
         
-    tags = acc['tags']
+    tagz = acc['tags']
+    xr =[*set(tagz)]
+    tags = xr[:10]
     user = acc['username']
     minez = []
     my_posts = link_db.find({"owner" : me})

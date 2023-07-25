@@ -43,7 +43,7 @@
     <br>
     </div>
     
-    <input name="username" maxlength="20" minlength="5" placeholder="Username" type="text" class="inputs">
+    <input name="username" maxlength="20" minlength="3" placeholder="Username" type="text" class="inputs">
     <br>
     <br>
     
@@ -53,11 +53,12 @@
     <input name="passc2"  ari-required  maxlength="60" minlength="8"   placeholder="Repeat Password" type="password" class="inputs">
     <br>
     <br>
-    
+    <h2>Profile</h2>
     <div class="image-upload">
         <label for="file-input">
-          <img id="previewImg" src="{{ url_for('static', filename='/imgs/kano.jpg') }}" class="profile_banner" />
+          <img id="previewImg" src="{{ url_for('static', filename='/imgs/kano.png') }}" class="profile_banner" />
           <input id="file-input" name="img" type="file" required onchange="previewFile(this);" style="display: none;" />
+          
         </label>
       </div>
       

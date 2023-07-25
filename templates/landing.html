@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
-  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link id="demo" href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
   <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link  href="{{ url_for('static', filename='js/mani.json') }}" rel="manifest">
+ <title></title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
   </head>
 
@@ -18,7 +20,7 @@
         <label class="top_bar_items1">
             
             <a class="no_under" href="{{ url_for('register') }}"> 
-                <i class="fa fa-sign-in fa-2x" style="color:black"></i> </a> Join
+                <img src="static/imgs/join-icon.webp" class="damn"  ></a> Join
         </label>
 
 
@@ -57,7 +59,7 @@
                     <br>
                            <div  class="owner">
                             <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home" onclick="openIframe()" > Read</button></a>
-                               <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                               <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
                                <div class="name">
                                    {{x.viewed}}
                                </div>
@@ -94,4 +96,99 @@
 
 </script>
 </body>
+
+  <style>
+    #install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+
+  <!-- Your website content goes here -->
+
+  <!-- Install Notification -->
+  <div id="install-notification">Add to Home Screen</div>
+
+  <script>
+    // Check if the device is Android
+    function isAndroid() {
+      return /Android/i.test(navigator.userAgent);
+    }
+
+    // Show the installation prompt
+    function showInstallPrompt() {
+      // Check if the browser supports the beforeinstallprompt event
+      if ("onbeforeinstallprompt" in window) {
+        // Prevent the default prompt
+        window.onbeforeinstallprompt = function (e) {
+          e.preventDefault();
+          window.alert("Install Now") ;
+
+         
+        };
+      }
+    }
+    const manifest = {
+    "name": "Links",
+    "short_name": "Links",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#007bff",
+    "icons": [
+      {
+        "src": "static/js/size192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "static/js/size512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ]
+  }
+    // Show the installation prompt when the button is clicked
+    document.getElementById("install-notification").addEventListener("click", function() {
+      if (isAndroid()) {
+        showInstallPrompt();
+        navigator.addContentToHomescreen(manifest);
+
+      }
+    });
+
+
+
+
+    const serviceWorkerScript = showInstallPrompt();
+
+    const blob = new Blob([serviceWorkerScript], { type: 'application/javascript' });
+    const serviceWorkerBlobURL = URL.createObjectURL(blob);
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async function() {
+        try {
+          const registration = await navigator.serviceWorker.register(serviceWorkerBlobURL);
+          
+        } catch (error) {
+        
+        }
+      });
+    }
+
+
+  </script>
+
+
+
+
+
+
+
 </html>

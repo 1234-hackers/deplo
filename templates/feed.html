@@ -14,8 +14,8 @@
            </div>
            
        </div>
-       <div class="desc">
-           {{x.description}} <div class="edited"> {{x.edited}} </div>
+       <div class="desc" >
+           {{x.title}} <div class="edited"> {{x.edited}} </div>
        </div>
 
        <img class="post_pic" src = "{{x.ima }}" >
@@ -24,8 +24,8 @@
         <br>
                <div  class="owner">
                 <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>
-                   <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
-                   <div class="name2">
+                   <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                   <div class="name2" style="font-style: italic;">
                        {{x.viewed}}
                    </div>
                    
