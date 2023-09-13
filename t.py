@@ -67,3 +67,24 @@ def timez():
 
 timez()
 
+
+import logging
+from logging.handlers import RotatingFileHandler
+
+
+# Set the log level (you can adjust this as needed)
+app.logger.setLevel(logging.INFO)
+
+# Create a log file and set up logging to that file
+log_file = "your_app.log"
+handler = RotatingFileHandler(log_file, maxBytes=1024 * 1024, backupCount=10)
+handler.setLevel(logging.INFO)
+
+# Create a formatter and add it to the handler
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+
+# Add the handler to the app's logger
+app.logger.addHandler(handler)
+
+
