@@ -5,3 +5,19 @@ link = link_input
 shortener = pyshorteners.Shortener()
 url = shortener.tinyurl.short(link)
 print(url)
+
+<VirtualHost *:80>
+    ServerName your_domain_or_IP_address
+    ServerAdmin your_email_address
+    WSGIDaemonProcess your_app_name threads=5
+    WSGIScriptAlias / /path/to/your/flask_app/wsgi.py
+
+    <Directory /path/to/your/flask_app>
+        WSGIProcessGroup your_app_name
+        WSGIApplicationGroup %{GLOBAL}
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
