@@ -88,3 +88,35 @@ handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
 
+import smtplib
+
+# SMTP server configuration
+smtp_server = 'your_smtp_server.com'  # Replace with your SMTP server's hostname or IP address
+smtp_port = 587  # This is the default port for secure SMTP (TLS)
+smtp_username = 'your_username'
+smtp_password = 'your_password'
+
+# Create an SMTP connection
+try:
+    server = smtplib.SMTP(smtp_server, smtp_port)
+    server.starttls()  # Enable TLS encryption for secure connection
+    server.login(smtp_username, smtp_password)
+
+    # Compose your email
+    subject = 'Your Subject Here'
+    body = 'Your email body here'
+    from_email = 'your_email@example.com'
+    to_email = 'recipient@example.com'
+    message = f'Subject: {subject}\n\n{body}'
+
+    # Send the email
+    server.sendmail(from_email, to_email, message)
+    print('Email sent successfully')
+
+except Exception as e:
+    print(f'An error occurred: {str(e)}')
+
+finally:
+    server.quit()  # Close the SMTP connection
+
+
