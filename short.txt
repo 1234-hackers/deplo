@@ -21,3 +21,8 @@ print(url)
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
+
+#!/usr/bin/python3
+import sys
+sys.path.insert(0, '/path/to/your/flask_app')  # Adjust the path
+from your_app import app as application
