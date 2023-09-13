@@ -99,6 +99,23 @@ smtp_password = 'your_password'
 # Create an SMTP connection
 try:
     server = smtplib.SMTP(smtp_server, smtp_port)
+
+
+
+
+
+
+
+try:
+    server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+    server.login(smtp_username, smtp_password)
+except Exception as e:
+    print(f"SMTP connection error: {str(e)}")
+
+
+
+
+
     server.starttls()  # Enable TLS encryption for secure connection
     server.login(smtp_username, smtp_password)
 
