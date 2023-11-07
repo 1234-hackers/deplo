@@ -46,7 +46,6 @@ uri = "mongodb+srv://jackson:mutamuta@hbcall.ihz6j.azure.mongodb.net/test?retryW
  # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
  # Get the users collection
-users_collection = client.Hases.backup
 
 #from postmarker.core import PostmarkClient
 ip = socket. gethostbyname(socket. gethostname())
@@ -81,19 +80,15 @@ application.config['MONGO_URI'] = 'mongodb://localhost:27017/main'
 
 mongo = PyMongo(application)
 
-client = MongoClient('localhost', 27017)
-db_pic = client.users
-gfs = GridFS(db_pic)
-
 application.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 Hash_passcode = CryptContext(schemes=["sha256_crypt" ,"des_crypt"],sha256_crypt__min_rounds=131072)
 
 mongo = PyMongo(application)
 
-users = mongo.db.users
-link_db = mongo.db.links
-verif = mongo.db.verify_email
+users = client.flaka.users
+link_db = client.flaka.links
+verif = client.flaka.verify_email
 
 def login_required(f):
     @wraps(f)
@@ -155,7 +150,7 @@ def reset_session_required(f):
     return wrap
 @application.route('/reset_pass/', methods = ['POST','GET'])
 def  reset_pass():
-    reset_db = mongo.db.pass_reset
+    reset_db = client.flaka.pass_reset
     code = random.randint(145346 , 976578)
     code = str(code)
     if request.method == "POST":
@@ -190,7 +185,7 @@ def enter_code():
     email = session['rset']
     if "x" =="x":
         if request.method == "POST":
-            reset_db = mongo.db.pass_reset
+            reset_db = client.flaka.pass_reset
             code = request.form['code']
             legit = reset_db.find_one({"email" : email})
             if legit:
@@ -231,7 +226,7 @@ def enter_code():
 def peopleass():
     email = session['rset']
     if request.method == "POST":
-        users = mongo.db.users
+        users = client.flaka.users
         target_account = session['rset'] 
         pass1 = request.form['pas1']
         pass2 = request.form['pas2']
@@ -260,25 +255,16 @@ def login():
 
                 existing_pass = existing_user['password']
                 if Hash_passcode.verify(passcode,existing_pass):
-                    username = existing_user['username']
+                    username = existing_user['email']
                     if username in session:
-                        fa = existing_user['tags']
                         if v == 0 :
-                            return redirect(url_for('complete_regist'))
-                        if len(fa) < 5 and v ==1 :
-                             return redirect(url_for('choose_tags'))
-                        if len(fa) > 5 and v == 0 :
                              return redirect(url_for('complete_regist'))
                         else:
                             return redirect(url_for('feed'))
                     else:    
                         session.parmanent = True
                         session['login_user'] = email
-                        fa = existing_user['tags']
-                        if len(fa) < 5:
-                            return redirect(url_for('choose_tags'))
-                        else:    
-                            return redirect(url_for('feed'))
+                        return redirect(url_for('feed'))
     return render_template('login.html')
 
 @application.route('/logout/' , methods = ['POST','GET'])
@@ -295,55 +281,31 @@ def logout():
 @application.route('/register/',methods = ['POST','GET'])
 def register():
     
-    if request.method == "POST" and "img" in request.files:
+    if request.method == "POST":
         
-        pic = request.files['img']
+#        pic = request.files['img']
         
         email = request.form['email']
         
-        username =  request.form['username']
+#        username =  request.form['username']
         
         passc = request.form['passc']
         
         passc2 = request.form['passc2']
         
         hashed = Hash_passcode.hash(passc2)
-        
-        filename = pic.filename
-        def allowed_file(filename):
-            return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
             
         registered = users.find_one({"email":email})
         if registered:
             mess = "You are already registered,please Log in"
             return redirect(url_for('home'))
         if passc == passc2  and not registered:
-            if allowed_file(filename):
-                fl = email.replace("." , "")
-                os.mkdir("static/images/" + fl)
-                pt = "static/images/" + fl + "/"
-                des = fl + "/" + filename
-                dess = "static/images/" + des
-                
-                pic.save("static/images/" + des)
-                image1 = "static/images/" + des
-                image = Image.open(image1)
-                image2 = image.resize((150,150),Image.ANTIALIAS)
-                new = image2.convert("RGB")
-                new.save(pt + fl + '.jpg')
-                
-                image = pt +fl + ".jpg"
-                
-                os.remove(dess)
-            
-            mess = "Registerd Successfully" 
-            favs = []
-            tags = []
-           
-            users.insert_one({"email":email ,'username':username , "password":hashed , 
+          favs = []
+          tags = []
+          users.insert_one({"email":email  , "password":hashed , 
                              "favs" : favs , "tags" : tags , "verified" :0 , 'saved' : [], "viewed" :[]  })
             
-            if users.find_one({"email":email}):
+          if users.find_one({"email":email}):
                 code = random.randint(145346 , 976578)
                 code = str(code)
                 session['login_user'] = email
@@ -360,7 +322,7 @@ def register():
 
 @application.route('/complete_regist' , methods = ['POST' , 'GET'])
 def complete_regist():
-    verif = mongo.db.verify_email
+#    verif = client.flaka.verify_email
     user_email = session['login_user']
     in_db = verif.find_one({"email" : user_email})
     if request.method == "POST":
@@ -370,7 +332,7 @@ def complete_regist():
             if code == de_code:
                 users.find_one_and_update({"email" : user_email} ,{ '$set' :  {"verified": 1}} )
                 verif.find_one_and_delete({'email' : user_email})
-                return redirect(url_for('choose_tags'))
+                return redirect(url_for('login'))
             else:
                 print("Wrong Code")
                 time.sleep(2)
@@ -382,73 +344,18 @@ def complete_regist():
     
 
 
-@application.route('/choose_tags/' , methods = ['POST','GET'])
-@login_required
-def choose_tags():
-    the_tags = tags1 = ['music','sports','crypto','technology','real estate','nature','art',
-                        'gaming','nft','politics','elon','watch','memes','russia']
-    user_email = session['login_user']
-    if request.method == "POST":
-        aaction = request.form.getlist('tags')
-        user_db = mongo.db.users
-        
-        list2 = random.sample(the_tags , 6)
-        user = user_db.find_one({"email" : user_email})
-        if len(aaction) < 5:
-            em_tags = user['tags']
-            for x in list2:
-                em_tags.append(x)
-            user_db.find_one_and_update({"email" : user_email} ,{ '$set' :  {"tags": em_tags}} )
-            return redirect(url_for('feed'))
-        else:
-            em_tags = user['tags']
-            for y in aaction:
-                em_tags.append(y)
-            user_db.find_one_and_update({"email" : user_email} ,{ '$set' :  {"tags": em_tags}} )
-            return redirect(url_for('feed' ))      
-    return render_template('choose_tags.html' , tags = the_tags)
-
 @application.route('/feed/' , methods = ['POST','GET'])
 @login_required
 def feed():
     session.pop('viewing', None)
-    link_db = mongo.db.links
+    link_db = client.flaka.links
     em = link_db.find()
-    user = mongo.db.users
-    trending_db = mongo.db.trending
+    user = client.flaka.users
+    trending_db = client.flaka.trending
     randomly = link_db.find().limit(100)
     render_array = []
     render_array.extend(randomly)
-    #based on following people
-    user_email = session['login_user']
-    the_user = users.find_one({"email" : user_email})
-    favs = the_user["favs"]
-    fav_arr = []
-    if len(favs) <10:
-        count = 3
-    else:
-        count = 2
-    for x in favs:         
-        user = x
-        documentz = link_db.find({"owner" : user }).limit(count)
-        for kk in documentz:
-            if not kk in render_array:
-                fav_arr.extend(documentz)      
-    render_array.extend(fav_arr)
 
-    #based on tags
-    my_tags = the_user["tags"]
-    for y in my_tags:
-        indiv_tags  = y
-        #relevant = trending_db.find({"tags" : tags})
-        arr1 = []
-        all_posts= link_db.find().limit(300)
-        for x in all_posts:
-            tags = x['tags']
-            if indiv_tags in tags:
-                if not  x in render_array: 
-                    arr1.append(x)        
-    render_array.extend(arr1)
     random.shuffle(render_array)
     for x in render_array:
         views = x['viewed']
@@ -457,130 +364,12 @@ def feed():
         new_val = new + 1
         link_db.find_one_and_update({"_id" : idn} ,{ '$set' :  {"viewed": new_val}} )
 
-        
     #view link functionality
     if request.method == "POST":
         return redirect(url_for('feed'))
 
-    #     the_id = request.form['id']
-    #     if request.form['sub'] == "View": 
-    #         session["linky"] = the_id
-    #         the_post = link_db.find_one({"post_id" : the_id})
-    #         likes= the_post['likes']
-    #         total_likes = len(likes)
-    #         clicker = session['login_user']
-    #         if clicker in likes:
-    #             likes.remove(clicker)
-    #             total_likes = len(likes)
-    #             link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"likes": likes  , 'total_likes' : total_likes }} )
-    #             #return redirect(url_for('view_link' ))
-                
-    #         else:
-    #             likes.append(clicker) 
-    #             total_likes = len(likes)
-    #             link_db.find_one_and_update({"post_id" : the_id} ,{ '$set' :  {"likes": likes  , 'total_likes' : total_likes}} )
-    #             #return redirect(url_for('view_link' ))
-            
-        
-        
-    random.shuffle(render_array)                 
-    return render_template('feed.html' , arr = render_array , fav = fav_arr , email = user_email )
-
-@application.route('/search/' , methods = ['POST','GET'])
-@login_required
-def search():
-    user_email = session['login_user']
-    if request.method == "POST":
-        de_search = request.form['search']
-        session['q'] = de_search           
-        return redirect(url_for('found_posts'))    
-   
-    return render_template('search.html')
-
-@application.route('/found_posts/' , methods = ['POST','GET'])
-@login_required
-def found_posts():
-    to_show = []
-    de_search = session['q']
-    finds = de_search.split()
-    al = link_db.find()
-    for x in finds: 
-        for c in al:
-            emt = c['tags']
-            if x in emt:
-                if not x in to_show:
-                    to_show.append(c)      
-            lks = c['link']
-            de_lin = lks.split()
-            if x in de_lin:
-                if not x in to_show:
-                    to_show.append(c) 
-            ttl = c['title']
-            de_ttl = ttl.split()
-            if x in de_ttl:
-                if not x in to_show:
-                    to_show.append(c)
-            desc = c['description']
-            de_desc = desc.split()
-            if x in to_show:
-                if not x in to_show:
-                    to_show.append(c)
-            if len(to_show) < 1:
-                no = "No Result Found,Please Check Your Spelling See More"
-            else:
-                no = "Results From Search"
-    return render_template('found_post.html' , post = to_show , n = no)
-
-
-@application.route('/found_people' , methods = ['POST','GET'])
-@login_required
-def found_people():
-    session.pop("de_email" ,None)
-    de_search = session['q']
-    de_users = []
-    people = []
-    temp = []
-    all_usr = users.find()
-    for q in all_usr:
-        name = q['username']
-        email = q['email']
-        new_m = email.split('@' , maxsplit = 1 )
-        mai = new_m[0]
-        if name == de_search:
-            if not q in de_users:
-                de_users.append(q) 
-        if de_search in mai:
-            if not q in de_users:
-                de_users.append(q)
-        if mai in de_search:
-            if not q in de_users:
-                de_users.append(q) 
-        if name in de_search:
-            if not q in de_users:
-                de_users.append(q)
-        if de_search in name:
-            if not q in de_users:
-                de_users.append(q) 
-        people.extend(de_users)
-        new_p = []
-        for i in people:
-            if i not in new_p:
-                new_p.append(i)
-    
-        if len(new_p) < 1:
-                no = "No Result Found,Please Check Your Spelling See More..."
-        else:
-                no = "Results From Search"
-        
-        if request.method == "POST":
-            the_id = request.form['id']
-            if request.form['sub'] == "View Profile": 
-                session["de_email"] = the_id
-                return redirect(url_for('view_prof' ))
-            
-            pass
-        
-    return render_template('found_people.html' , p = new_p , n = no)
+    random.shuffle(render_array)
+    return render_template('feed.html' , arr = render_array )
 
 @application.route('/pple/' , methods = ['POST','GET'])
 @login_required
@@ -598,7 +387,7 @@ def pple():
 @application.route('/profile/' , methods = ['POST','GET'])  
 @login_required
 def profile():
-    trend = mongo.db.trending
+    trend = client.flaka.trending
     me = session['login_user']
     me2 = me.replace("." , "")
     the_arr = ["electric car" , "rap" , "football"]
@@ -637,7 +426,7 @@ def profile():
 
     def allowed_file(filename):
             return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    user = mongo.db.users
+    user = client.flaka.users
     user_email = session['login_user']
     email = user_email
     fl = email.replace("." , "")
@@ -779,8 +568,8 @@ def post_on_tags():
 @application.route('/view_link/' , methods = ['POST','GET'])
 @login_required
 def view_link():
-    link_db = mongo.db.links
-    user = mongo.db.users
+    link_db = client.flaka.links
+    user = client.flaka.users
     user_email = session['login_user']
     the_user = users.find_one({"email" : user_email})
     viewed = the_user['viewed']
@@ -818,7 +607,7 @@ def view_link():
                 
 
     link = session['linky']
-    link_db = mongo.db.links
+    link_db = client.flaka.links
     render_arr = []
     all_posts = link_db.find()
     post_in = link_db.find_one({"post_id" : link})
@@ -850,7 +639,7 @@ def view_link():
 @application.route('/advert/' , methods = ['POST','GET'])
 @login_required
 def advert():
-    advert_db = mongo.db.adverts 
+    advert_db = client.flaka.adverts 
     if request.method == "POST":
         
         title = request.form['title']
@@ -891,7 +680,7 @@ def post():
         
         filename = th.filename
             
-        link_db = mongo.db.links
+        link_db = client.flaka.links
         
         title = request.form['title']
         
@@ -1076,16 +865,27 @@ def topics():
                         rend.append(x)
                         
                 if len(rend) < 1:
-                    trending_db = mongo.db.links
+                    trending_db = client.flaka.links
                     rend2 = trending_db.find().limit(15)
                     return render_template("topics.html" , t = rend2)
             redirect(url_for('topics'))
-
     except UnboundLocalError as xz:
         return redirect(url_for('feed'))
 
     return render_template("topics.html" , t = rend)
 
+
+
+
+
+@application.route('/receive_data', methods=['POST','GET'])
+def receive_data():
+     if request.method =="POST":
+
+          data = request.json  # Assuming the data is sent as JSON
+          # Process the data here
+          return render_template("r.html",t = data)
+     return render_template("r.html")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@
     margin-left: 70px;
     border-radius: 5px;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .site_pic{
             margin-top: 30px;
             margin-left: 40px;
@@ -121,7 +121,7 @@
 
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .side_nav {
             width: 100%;
             opacity: 0;
@@ -138,7 +138,7 @@ text-decoration: none;
 }
 .n{text-decoration: none;
 text-transform: capitalize;}
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .side_items {
             width: 100%;
 
@@ -162,7 +162,7 @@ text-transform: capitalize;}
     width: 100%;
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
     .topbar{
         width: 500px;
         position: absolute;
@@ -195,7 +195,7 @@ text-transform: capitalize;}
     flex-direction: column;
     margin-left: 350px;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .top_bar_items1{
             display: flex;
             flex-direction: column;
@@ -240,7 +240,7 @@ overflow: hidden;
 {
 
 }
-@media screen and (max-width:570px) {
+@media screen and (max-width:480px) {
     .post_pic {
         width: 97%;
 
@@ -356,7 +356,7 @@ overflow: hidden;
     width: 447px;
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .main_body{
             font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
             font-weight: 500;
@@ -381,7 +381,7 @@ overflow: hidden;
 
     }
 
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
     .owner{
         margin-left: 5px;
         margin-right: auto;
@@ -396,7 +396,7 @@ overflow: hidden;
     height: 40px;
     border-radius: 50%;
 }
-@media screen and (max-width:570px) {
+@media screen and (max-width:480px) {
 .owner_img{
     width: 35px;
     height: 35px;
@@ -409,7 +409,7 @@ overflow: hidden;
     border-radius: 3px;
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
     .post_image {
     width: 500px;
     height: 300px;
@@ -423,7 +423,7 @@ overflow: hidden;
     margin-left: 200px;
     margin-bottom: 0%; 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
     .image_clouser {
     margin: 20px 20px 30px 20px;
     margin-left: 40px;
@@ -437,7 +437,7 @@ overflow: hidden;
         font-family: 'Segoe UI', Tahoma;
         font-weight: 500;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
     .det{
         margin-top: 2px;
         font-family: 'Segoe UI', Tahoma;
@@ -451,7 +451,7 @@ overflow: hidden;
     margin-left: 2px;
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .details{
             margin-bottom: 5px;
             margin-left: 2px;
@@ -464,7 +464,7 @@ overflow: hidden;
     color: rgb(76, 132, 196);
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         
     .form_cl{
         margin-top: 3px;
@@ -476,7 +476,7 @@ overflow: hidden;
 .hd{
     opacity: 0;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         
         .hd{
             opacity: 0;
@@ -489,7 +489,7 @@ overflow: hidden;
         margin-left: 40px;
         margin-bottom: 0%; 
         }
-        @media screen and (max-width:570px) {
+        @media screen and (max-width:480px) {
             .image_clouser2 {
             margin-left: 10px;
             margin-right: auto;
@@ -503,7 +503,7 @@ overflow: hidden;
         height: 300px;
         border-radius: 3px;
         }
-        @media screen and (max-width:570px) {
+        @media screen and (max-width:480px) {
             .post_images {
             width: 440px;
             height: 250px;
@@ -517,7 +517,7 @@ overflow: hidden;
             
         }
             
-        @media screen and (max-width:570px) {
+        @media screen and (max-width:480px) {
             .owners{
             margin-left: 0px;
             margin-right: auto;
@@ -531,7 +531,7 @@ overflow: hidden;
         margin-top: 5px;
         margin-left: 2px;
     }
-        @media screen and (max-width:570px) {
+        @media screen and (max-width:480px) {
         .dets{
             font-family: 'Segoe UI', Tahoma;
             font-weight: 500;
@@ -546,7 +546,7 @@ overflow: hidden;
             color: black;
         
             }
-            @media screen and (max-width:570px) {
+            @media screen and (max-width:480px) {
                 
             .form_cl{
                 margin-top: 3px;
@@ -580,7 +580,7 @@ overflow: hidden;
     margin-top: 100px;
     word-wrap: break-word;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .login-container{
             float: left;
             width: 250px;
@@ -599,7 +599,7 @@ overflow: hidden;
     margin-left: 150px;
     margin-bottom: 10px;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .login-banner{
             color: black;
             font-size: 22px;
@@ -619,7 +619,7 @@ overflow: hidden;
     background-color:white;
     display:inline;
     height: 30px;
-    width: 100%;
+    width: 450px;
     margin-bottom: 5px;
     border-top: none;
     border-right: none;
@@ -637,12 +637,12 @@ overflow: hidden;
 /*Main Page*/
 .home_cont{
     color: black;
-    margin-left: 320px;
-    width: 500px;
+    margin-left: 100px;
+    width: 457px;
     word-wrap: break-word; 
     border-top: 0px;
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .home_cont{
             color: black;
 
@@ -661,7 +661,7 @@ overflow: hidden;
     color:  rgb(76, 132, 196);
 
     }
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         
     .form_cl{
         margin-top: 3px;
@@ -703,7 +703,7 @@ overflow: hidden;
 
     }
 
-    @media screen and (max-width:570px) {
+    @media screen and (max-width:480px) {
         .drawer{
             color: black;
             background-color: white;
