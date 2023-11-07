@@ -1,6 +1,6 @@
 import base64
 from email import message
-from turtle import st
+#from turtle import st
 from dns.message import Message
 from flask import Flask, render_template, url_for, request, redirect,flash,session
 from flask.scaffold import F
@@ -40,7 +40,15 @@ import asyncio
 import markupsafe
 from markupsafe import escape , Markup
 
-from postmarker.core import PostmarkClient
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+uri = "mongodb+srv://jackson:mutamuta@hbcall.ihz6j.azure.mongodb.net/test?retryWrites=true&w=majority" 
+ # Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'))
+ # Get the users collection
+users_collection = client.Hases.backup
+
+#from postmarker.core import PostmarkClient
 ip = socket. gethostbyname(socket. gethostname())
 ipst = str(ip)
 application = Flask(__name__)

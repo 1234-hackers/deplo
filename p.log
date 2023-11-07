@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/root/deplo/main.py", line 3, in <module>
+    from turtle import st
+  File "/usr/lib/python3.10/turtle.py", line 107, in <module>
+    import tkinter as TK
+ModuleNotFoundError: No module named 'tkinter'
