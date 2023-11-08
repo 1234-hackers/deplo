@@ -13,46 +13,18 @@
 
   <body class="main_body"  style="background-color:rgb(226, 226, 232); width: fit-content;">
     <div class="site_pic">
-        <label>
-           <a class="side_menu_items" href="{{ url_for('feed') }}"> 
-            
-                <image class="lks"  src="{{url_for('static',filename = 'imgs/ban.png')}}" >
-                </a>
-          </label>
       </div>
 <!-- Nav BAR-->
     <div class="topbar">
-<h1> Waka Flaka</h1>        
-
+<a class="side_menu_items" style= "text-decoration: none;" href="{{ url_for('feed') }}">
+<h1 class="waka"> Waka Flaka</h1>        
+</a>
     </div>
 
 
 <!-- main container starts here -->
 <!-- SIDE BAR-->
 <div class="main_container">
-    <div class="side_nav">
-
-        <label class="side_items">
-            
-            <a  href="{{ url_for('feed') }}"  class="no_under">  
-                <i class="fa fa-home fa-3x" style="color:rgb(20, 20, 78)"></i> 
-                <h3 style="font-weight: bold;"> Home</h3>
-              
-            </a>
-        </label>
-        <br>
-        <br>
-        
-             
-            <a  href="{{ url_for('profile') }}" class="no_under"> 
-                <i class="fa fa-odnoklassniki fa-3x" style="color:rgb(20, 20, 78)"></i> 
-                 <h3 style="font-weight: bold;"> Profile</h3>
-            </a>
-                
-        </label>
-
-
-    </div>
 
 <!-- MAIN CONTAINER-->
 <div class="middle">

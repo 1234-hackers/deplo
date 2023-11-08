@@ -7,13 +7,9 @@
  
 <img class="profile_users2" src = "{{nn}}"  >
 <br>
-
-{{obj.username}}
-
         <br>
 <button class="sub_btn"> <a href="{{ url_for('my_post') }}" style="text-decoration: none; color: aliceblue;"> Posts </button></a>
 
-<button class="sub_btn" type="button" onclick='document.getElementById("demo").innerHTML = "{{obj.theme}}"'>Nighty</button>
         <p/>
         <br>
         
@@ -21,51 +17,6 @@
 <p class="heads">
     Edit Profile Here
 </p>
-    <form method="POST" action= "{{ url_for('profile') }}"  enctype="multipart/form-data"> 
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <br>
-
-
-      <label for="file-input">
-        <img id="previewImg" src = "{{nn}}" class="profile_users3" style="background-image: url(img/pr.png);" />
-      </label>
-  <br>
-      <input id="file-input" name="img" type="file"  onchange="previewFile(this);" style="display: none;" />
-   
-   
-    
-    <script>
-      function previewFile(input) {
-        var file = input.files[0];
-    
-        if (file) {
-          var reader = new FileReader();
-    
-          reader.onload = function() {
-            document.getElementById("previewImg").src = reader.result;
-          };
-    
-          reader.readAsDataURL(file);
-        }
-      }
-    </script>
-
-
-
-
-<br>
-    <input class="sub_btn"  style="text-decoration: none; color: aliceblue;" type="submit" name="sub" value="Change">
-    <br>
-        
-        <br>
-        Username <br>
-        <input class="inputs" type="text" name = "username"  placeholder = "{{inf.username}}"  >
-        <br>
-        <br>
-      
-    
-        <input class="sub_btn" type="submit"  name="sub" value="Update" >
-    </form>
     <button class="sub_btn"> <a href="{{ url_for('logout') }}" style="text-decoration: none; color: aliceblue;"> Exit </button></a>
 <div class="tags">
 

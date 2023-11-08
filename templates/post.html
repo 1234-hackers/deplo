@@ -11,15 +11,6 @@
     
     
     
-        <div class="image-upload">
-            <label for="file-input">
-              <img id="previewImg" src="{{ url_for('static', filename="/imgs/links.png") }}" class="thumbnail" />
-            </label>
-        <br>
-            ThumbNail
-            <input id="file-input" name="thumb" type="file" required onchange="previewFile(this);" style="display: none;" />
-          </div>
-         
           
           <script>
             function previewFile(input) {
@@ -46,22 +37,15 @@
         <br>
         <br>
     
-    <input name="link" id="link"  maxlength="40" placeholder="Link" type ="url" class="inputs">
+        <div class="image-upload">
+            <label for="file-input">
+              <img id="previewImg" src="{{ url_for('static', filename="/imgs/links.png") }}" class="thumbnail" />
+            </label>
         <br>
-        <br>
-    <br>
-    <textarea class="inputs" type="text" name="desc" id="inbox" placeholder="Short Description @100" maxlength="100"  rows=" 5" style="margin: 0px; width: 250px; height: 69px;"></textarea>
-    
-        <br>
-    
-                <legend>
-               
-                </legend>
-    <input  class="inputs" name="tag1" id="tag1" placeholder="Tags Separated by Commas I.e car,fast,tech" type="text">
-                <br>
-                
-                <br>
-    
+            ThumbNail
+            <input id="file-input" name="thumb" type="file" accept="video/*"  required onchange="previewFile(this);" style="display: none;" />
+          </div>
+         
             </fieldset>
             <br><br>
     

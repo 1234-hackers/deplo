@@ -30,7 +30,7 @@ import random
 #from flask_mail import Mail,Message
 import base64
 from bson.binary import Binary
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 #mpsa imports
 #from flask_mpesa import MpesaAPI
 import pyshorteners
@@ -392,81 +392,8 @@ def profile():
     me2 = me.replace("." , "")
     the_arr = ["electric car" , "rap" , "football"]
     acc = users.find_one({"email" : me})
-    favs = acc['favs']
-    emps = []
-    for x in favs:
-        de_name = users.find_one({'email': x})['username']
-        emps.append(de_name)
-        
-    tagz = acc['tags']
-    xr =[*set(tagz)]
-    tags = xr[:10]
-    user = acc['username']
-    minez = []
-    my_posts = link_db.find({"owner" : me})
-    more_posts = link_db.find({}).limit(5)
-    
-    
-    if os.path.exists("static/images/" + me2 +"/" + me2 +".jpg"):
-        prof_pic = "static/images/" + me2 +"/" + me2 +".jpg" 
-      
-    else:
-        prof_pic = "/static/images/default.jpg"
-    links = []
-    links.append(prof_pic)
-    dez_name = Markup(prof_pic)
-    nnn =   "/static/images/" + me2 +"/" + me2 +".jpg" 
-    if request.method == "POST":
-        tag = request.form['sub'] 
-    
-        if tag:
-            session['de_tag'] = tag
-            
 
-
-    def allowed_file(filename):
-            return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    user = client.flaka.users
-    user_email = session['login_user']
-    email = user_email
-    fl = email.replace("." , "")
-    info = user.find_one({"email" : user_email})
-    if request.method == "POST":
-        if request.form['sub'] == "Change":
-            image = request.files['img']
-            if image is not None:
-                #os.remove('static/images/' + fl)
-                filename = image.filename
-            if allowed_file(filename): 
-                os.mkdir("static/images/" + fl)
-                pt = "static/images/" + fl + "/"
-                des = fl + "/" + filename
-                dess = "static/images/" + des
-                    
-                image.save("static/images/" + des)
-                image1 = "static/images/" + des
-                image = Image.open(image1)
-                image2 = image.resize((270,150),Image.ANTIALIAS)
-                new = image2.convert("RGB")
-                new.save(pt + fl + '.jpg')
-                image = pt +fl + ".jpg"
-                os.remove(dess)
-                return redirect(url_for('feed'))
-        
-        
-        if request.form['sub'] == "Update":
-            name = request.form['username']
-            if not name == info['username']:
-                if not name == "":
-                    users.find_one_and_update({"email" : user_email} ,{ '$set' :  {"username":name}})
-                    return redirect(url_for('feed'))
-             
-        return render_template('profile.html' , me = me , favs = emps , tags = tags , mine = minez ,
-                           more = more_posts , links = links , prof = dez_name , nn = nnn ,obj = acc ,inf = info )
-        
-                      
-    return render_template('profile.html' , me = me , favs = emps , tags = tags , mine = minez ,
-                           more = more_posts , links = links , prof = dez_name , nn = nnn ,obj = acc ,inf = info )
+    return render_template('profile.html' , me = me  )
 
 
 @application.route('/saved/' , methods = ['POST','GET'])
@@ -671,6 +598,17 @@ def advert():
                              "plan" : plan })        
     
     return render_template('advert.html')
+
+
+from flask_uploads import UploadSet, configure_uploads, DATA
+
+application.config['UPLOADED_VIDEOS_DEST'] = 'static/videos'  # Define the upload folder
+videos = UploadSet('videos', extensions=DATA)
+configure_uploads(application, (videos,))
+
+from moviepy.editor import VideoFileClip, clips_array
+from moviepy.video.fx import resize
+
 @application.route('/post/' , methods = ['POST','GET'])
 @login_required
 def post(): 
@@ -683,56 +621,9 @@ def post():
         link_db = client.flaka.links
         
         title = request.form['title']
-        
-        desc = request.form['desc']
-        
-        link = request.form['link']
 
-        post_id = md5_crypt.hash(title)
-            
-        tag1 = request.form['tag1']
-
-
-        shortener = pyshorteners.Shortener()
-        try:
-            url = shortener.tinyurl.short(link)
-        except:
-            url = link
-        else:
-            url = link
-        
-        
-        
-        def allowed_file(filename):
-            return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-            
-        if allowed_file(filename): 
-            da_nam = post_id.replace("." , "")
-            da_nami = da_nam.replace("/" , "")
-            da_name = da_nami[0:10]
-            th.save("static/images/" + filename)
-            image1 = "static/images/"  + filename
-            image = Image.open(image1)
-            width = image.size[0]
-            heig = image.size[1]
-            if int(width) < int(heig):
-                rotated = image.rotate(-40)
-            else:
-                rotated = image
-            #image2 = image.resize((500,500),Image.ANTIALIAS)
-            rotated = image.convert("RGB")
-            rotated.save( "static/images/" + da_name + '.jpg')
-            image = da_name + '.jpg'
-            to_db =  "/static/images/" + image
-        tag_arr =[]
-        tag_arr2 = tag1.split()
-        for x in tag_arr2:
-            tag_arr.append(x)
         owner = session['login_user']
-        wner_name = users.find_one({'email' : owner})
-        owner_name = wner_name['username']
-        like_arr = [owner]
-        comments = []
+
         viewed = random.randint(5,10)
         
         now = dt.now()
@@ -741,11 +632,22 @@ def post():
         
         fl = owner.replace("." , "")
         fjp  = fl + ".jpg"
+
         imz = "/static/images/"+fl +"/" + fjp
-        link_db.insert_one({"owner" : owner , "link" : url ,  "likes" : like_arr , "comments" : comments , "viewed": viewed,
-                            "tags" : tag_arr , "title" : title , "description" : desc , "post_id" : post_id ,
-                            'owner_name' : owner_name , 'ima': to_db , 'time' : timez , 'imz' : imz})
-        return redirect(url_for('feed'))
+
+        post_id = md5_crypt.hash(title)
+        da_nam = post_id.replace("." , "")
+        da_nami = da_nam.replace("/" , "")
+        da_name = da_nami[0:10]
+        fle =  da_name +'.mp4'
+
+        if th:
+                video.save('static/videos', fle)
+                link_db.insert_one({"owner" : owner , "viewed": viewed, "title" : title ,
+	        "post_id" : post_id , 'ima': fle , 'time' : timez , 'imz' : imz})
+                return redirect(url_for('feed'))
+        else:
+                print("fuck")
     return render_template('post.html')
 
 

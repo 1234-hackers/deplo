@@ -16,6 +16,14 @@
         }
         }
 
+
+.waka{
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            color: #333;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
 .lks{
     width: 60px;
     height: 60px;
@@ -637,12 +645,12 @@ overflow: hidden;
 /*Main Page*/
 .home_cont{
     color: black;
-    margin-left: 100px;
+    margin-left: 10px;
     width: 457px;
     word-wrap: break-word; 
     border-top: 0px;
     }
-    @media screen and (max-width:480px) {
+    @media screen and (min-width:480px) {
         .home_cont{
             color: black;
 
@@ -871,6 +879,9 @@ overflow: hidden;
 .left_login{
     background-color: rgb(226, 226, 232);
     width: 200px;
+    float:left;
+  
+    margin-left:0px;
 }
 .middle1{
     color: rgb(169, 19, 234);
