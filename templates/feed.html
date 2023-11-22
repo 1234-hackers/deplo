@@ -44,6 +44,9 @@
        </div>
      
        </div>
+
+       {%endfor%}
+
 <style>
     #install-notification {
       position: fixed;
@@ -57,74 +60,9 @@
         text-decoration:none;
     }
   </style>
-<div><a href="{{ url_for('post') }}" id="install-notification">Post + </a></div>   
-      
-<!--     
-<script>
-
-    var floater = document.getElementById("drawer");
-    var the_button = document.getElementById("formbtn") 
-    var close = document.getElementById("close")
-    the_button.addEventListener("click",function(){floater.classList.add("open");
-    });
-
-    close.addEventListener("click",function(){floater.classList.remove("open");
-    });
-    
-   
-
-    var image_rotate = document.getElementById("imzz");
-    function rotate_img(){
-        var currentt_r = getComputedStyle(image_rotate).getPropertyValue("transform");
-        var values = currentt_r.split('(')[1].split(')')[0].split(',');
-        var a = values[0];
-        var b = values[1];
-        var c = values[2];
-        var d = values[1];
-        var angle = Math.round(Math.atan2(b,a) *(180/Math.PI)) + 90;
-        image_rotate.style.transform = "rotate(" + angle +"deg)";
-        
-    }
-    image_rotate.addEventListener("load",function(){
-        var wid = this.naturalWidth;
-        var len = this.naturalHeight;
-        if (wid > len){
-            rotate_img()
-        }
-    });
-
-
-
-
-
-
-</script> -->
-
-
-<script>
-    const dataToSend = { variableName: 'your_value_here' };
-
-    fetch('/receive_data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-    })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
-</script>
-
-       
-
-
-       {%endfor%}
-
-
        
    
-
+<div><a href="{{ url_for('post') }}" id="install-notification">Post + </a></div>
 
         </div>
      

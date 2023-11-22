@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -29,18 +30,32 @@
 
 <div class="login-container">
     <div class="login-banner">
-    Creator Auth
+    Creator Account
     </div>
-    <form method="POST" action=  "/login_creator/">
+    <form method="POST" action=  "/request_account/">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="formr">
-        <label for="username">Username
+        <label for="username">Creator Username
             <br>
-        <input name="user" type="text" required class="inputs" Placeholder="Creator Username">
+        <input name="email" type="text" required class="inputs" Placeholder="Displays on your posts">
     </label>
       <br>
       <br>
-      <label for="password">Password
+
+
+<label>
+        <input type="radio" name="options" value="option1" {% if selected_option == 'option1' %}checked{% endif %}>
+        1 Year Plan
+    </label>
+    <br>
+    <label>
+        <input type="radio" name="options" value="option2" {% if selected_option == 'option2' %}checked{% endif %}>
+        Lifetime Plan
+    </label>
+    <br>
+    <br>
+
+  <label for="password">Password
         <br>
         <input name="passcode" type="password" maxlength="50" minlength="8" required class="inputs"  Placeholder="Password">
     </label>
@@ -48,7 +63,7 @@
     <label>
          <br>
          <br>
-        <button type="submit" class="vis_button"> Log In</button>
+        <button type="submit" class="vis_button"> Request Account</button>
 
         </a>
 
@@ -58,9 +73,6 @@
 </form>
 <br>
 <br>
-
-<a href="{{ url_for('creator_terms') }}" style="text-decoration: none;"> Become a Creator </a>
-        <br>
         </div>
 
 
