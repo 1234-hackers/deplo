@@ -23,7 +23,21 @@
             color: #333;
             text-transform: uppercase;
             text-decoration: none;
+	    color:red;
         }
+
+.install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+        text-decoration:none;
+    }
+  
 .lks{
     width: 60px;
     height: 60px;
@@ -200,7 +214,6 @@ text-transform: capitalize;}
 
 .top_bar_items1{
     display: flex;
-    flex-direction: column;
     margin-left: 350px;
     }
     @media screen and (max-width:480px) {
@@ -645,7 +658,7 @@ overflow: hidden;
 /*Main Page*/
 .home_cont{
     color: black;
-    margin-left: 10px;
+    margin-left: -100px;
     width: 457px;
     word-wrap: break-word; 
     border-top: 0px;
@@ -843,7 +856,7 @@ overflow: hidden;
 
 .thumbnail{
     border-radius: 4px;
-    width: 330px;
+    width: 430px;
     height: auto;
     margin-bottom: 8px;
 }
@@ -877,7 +890,8 @@ overflow: hidden;
 
 }
 .left_login{
-    background-color: rgb(226, 226, 232);
+ diaplay:inline;
+   background-color: rgb(226, 226, 232);
     width: 200px;
     float:left;
   

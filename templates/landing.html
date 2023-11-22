@@ -8,35 +8,31 @@
   <link id="demo" href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
   <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
   <link  href="{{ url_for('static', filename='js/mani.json') }}" rel="manifest">
- <title></title>
+ <title>xxshorts</title>
+<link rel="icon" href="/static/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
   </head>
 
 
   <body class="main_body"  style="background-color:rgb(226, 226, 232); width: fit-content;">
-<div class="landing_home">
-    <div class="left_login">  
-
-        <label class="top_bar_items1">
-            
-            <a class="no_under" href="{{ url_for('register') }}"> 
-                <img src="static/imgs/join-icon.webp" class="damn"  ></a> Join
-        </label>
-
-
-        <label class="top_bar_items1">
-            
-            <a class="no_under" href="{{ url_for('login') }}"> 
-                <img src="static/imgs/lg.png" class="damn"  ></a> Login
-        </label>
-
-
+<div class="topbar">
+<a class="side_menu_items" style= "text-decoration: none;" href="{{ url_for('feed') }}">
+<h1 class="waka"> xxshorts</h1>
+</a>
     </div>
-    
+<div class="landing_home">
+
     
     <!-- MAIN CONTAINER-->
-    <div class="middle1">
-        <div class="middle">
+    <div class="miccddle1">
+       
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+ <div class="middle">
             <div class="home_cont">
            
                 {%for x in arr%}
@@ -53,12 +49,19 @@
                        {{x.description}} <div class="edited"> {{x.edited}} </div>
                    </div>
             
-                   <img class="post_pic" src = "{{x.ima }}" >
+                   {% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+        <img class="post_pic" src = "{{x.ima }}" >
+    {% elif x.ima.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg','.3gp')) %}
+        <video width="490" height="300" controls controlsList="nodownload">
+            <source src="{{ x.ima }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>                                                                                         {% endif %}
+
                    <div class="form_cl">
                     {{x.link}}
                     <br>
                            <div  class="owner">
-                            <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home" onclick="openIframe()" > Read</button></a>
+                            
                                <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
                                <div class="name">
                                    {{x.viewed}}
@@ -85,7 +88,22 @@
         </div>
     
     
+
     </div>
+<style>
+    #install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: red;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+	text-decoration:none;
+    }
+  </style>
+<div><a href="{{ url_for('login') }}" id="install-notification">Log In</a></div>
 
 </div>
 
@@ -97,93 +115,6 @@
 </script>
 </body>
 
-  <style>
-    #install-notification {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
-
-  <!-- Your website content goes here -->
-
-  <!-- Install Notification -->
-  <div id="install-notification">Add to Home Screen</div>
-
-  <script>
-    // Check if the device is Android
-    function isAndroid() {
-      return /Android/i.test(navigator.userAgent);
-    }
-
-    // Show the installation prompt
-    function showInstallPrompt() {
-      // Check if the browser supports the beforeinstallprompt event
-      if ("onbeforeinstallprompt" in window) {
-        // Prevent the default prompt
-        window.onbeforeinstallprompt = function (e) {
-          e.preventDefault();
-          window.alert("Install Now") ;
-
-         
-        };
-      }
-    }
-    const manifest = {
-    "name": "Links",
-    "short_name": "Links",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#007bff",
-    "icons": [
-      {
-        "src": "static/js/size192.png",
-        "type": "image/png",
-        "sizes": "192x192"
-      },
-      {
-        "src": "static/js/size512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
-    ]
-  }
-    // Show the installation prompt when the button is clicked
-    document.getElementById("install-notification").addEventListener("click", function() {
-      if (isAndroid()) {
-        showInstallPrompt();
-        navigator.addContentToHomescreen(manifest);
-
-      }
-    });
-
-
-
-
-    const serviceWorkerScript = showInstallPrompt();
-
-    const blob = new Blob([serviceWorkerScript], { type: 'application/javascript' });
-    const serviceWorkerBlobURL = URL.createObjectURL(blob);
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async function() {
-        try {
-          const registration = await navigator.serviceWorker.register(serviceWorkerBlobURL);
-          
-        } catch (error) {
-        
-        }
-      });
-    }
-
-
-  </script>
 
 
 

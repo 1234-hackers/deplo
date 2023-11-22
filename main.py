@@ -34,9 +34,7 @@ from bson.binary import Binary
 #mpsa imports
 #from flask_mpesa import MpesaAPI
 import pyshorteners
-import PIL
-from PIL import Image
-import asyncio
+
 import markupsafe
 from markupsafe import escape , Markup
 
@@ -89,7 +87,7 @@ mongo = PyMongo(application)
 users = client.flaka.users
 link_db = client.flaka.links
 verif = client.flaka.verify_email
-
+creators = client.flaka.creators
 def login_required(f):
     @wraps(f)
     def wrap(*args,**kwargs):
@@ -101,7 +99,15 @@ def login_required(f):
     return wrap
 
 
-
+def creator_required(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if "creator" in session:
+            return f(*args,**kwargs,)
+        else:
+            time.sleep(2)
+            return redirect(url_for('login_creator'))
+    return wrap
 
 def handle_csrf_error(f):
     @wraps(f)
@@ -126,15 +132,11 @@ def re_sess(f):
            
 @application.route('/',methods = ["POST","GET"])
 def home():
-    pops = ['musk' ,'python','gaming' ]
     r = link_db.find({}).limit(500)
     to_show = []
     em = []
-    for x in pops:
-        for one_post in r:
-            em.append(one_post)
-            if x in one_post['tags']:
-                to_show.append(x)
+    for x in r:
+        em.append(x)
     random.shuffle(em)
     return render_template("landing.html",arr = em)
 
@@ -266,6 +268,29 @@ def login():
                         session['login_user'] = email
                         return redirect(url_for('feed'))
     return render_template('login.html')
+
+
+
+@application.route('/login_creator/' , methods = ['POST','GET'])
+@login_required
+def login_creator():
+    if request.method == "POST":# and  hcaptcha.verify():
+        email = request.form['user']
+        existing_user  = creators.find_one({'username':email} )
+        if existing_user:
+                passcode = request.form['passcode']
+
+                existing_pass = existing_user['password']
+                if Hash_passcode.verify(passcode,existing_pass):
+                    username = existing_user['username']
+                    if username in session:
+                        return redirect(url_for('post'))
+                    else:
+                        session.parmanent = True
+                        session['creator'] = email
+                        return redirect(url_for('post'))
+    return render_template('login_creator.html')
+
 
 @application.route('/logout/' , methods = ['POST','GET'])
 @login_required
@@ -599,56 +624,68 @@ def advert():
     
     return render_template('advert.html')
 
-
+import secrets
 from flask_uploads import UploadSet, configure_uploads, DATA
+from werkzeug.utils import secure_filename
+application.config['UPLOADED_VIDEOS_DEST'] = 'static/videos'
 
-application.config['UPLOADED_VIDEOS_DEST'] = 'static/videos'  # Define the upload folder
-videos = UploadSet('videos', extensions=DATA)
-configure_uploads(application, (videos,))
 
-from moviepy.editor import VideoFileClip, clips_array
-from moviepy.video.fx import resize
+# Initialize the UploadSet
+videos = UploadSet('videos', extensions=('jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpeg', '3gp' ,'mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm', '.m4v', '.mpeg', '.3gp'))
+configure_uploads(application, videos)
 
-@application.route('/post/' , methods = ['POST','GET'])
+@application.route('/post/', methods=['GET', 'POST'])
 @login_required
-def post(): 
-    if request.method == "POST":
-        
-        th = request.files['thumb']
-        
-        filename = th.filename
-            
-        link_db = client.flaka.links
-        
-        title = request.form['title']
+@creator_required
+def post():
+    if request.method == 'POST':
+        if 'thumb' not in request.files:
+            return 'No file part'
+        file = request.files['thumb']
+        if file.filename == '':
+            return 'No selected file'
+        if file and videos.file_allowed(file, file.filename):
+            dn = secure_filename(file.filename)
+            #filename = videos.save(file)
+            th = request.files['thumb']
+            filename = th.filename
+            delimeter = "."
+            result = filename.split(delimeter, 1)[-1].strip()
+            random_string = secrets.token_hex(13)
+            new_filename = f"{random_string}"
+            file.save(os.path.join(application.config['UPLOADED_VIDEOS_DEST'], new_filename + "." + result))
 
-        owner = session['login_user']
+            link_db = client.flaka.links
 
-        viewed = random.randint(5,10)
-        
-        now = dt.now()
-        now_c = now.strftime("Time  %Y:%m:%d: , %H:%M:%S")
-        timez = now_c
-        
-        fl = owner.replace("." , "")
-        fjp  = fl + ".jpg"
+            title = request.form['title']
 
-        imz = "/static/images/"+fl +"/" + fjp
+            owner = session['login_user']
 
-        post_id = md5_crypt.hash(title)
-        da_nam = post_id.replace("." , "")
-        da_nami = da_nam.replace("/" , "")
-        da_name = da_nami[0:10]
-        fle =  da_name +'.mp4'
+            viewed = random.randint(530,1000)
+            xn = users.find_one({"email" : owner})
+            #owner_name =xn["username"]
+            now = dt.now()
+            now_c = now.strftime("Time  %Y:%m:%d: , %H:%M:%S")
+            timez = now_c
 
-        if th:
-                video.save('static/videos', fle)
-                link_db.insert_one({"owner" : owner , "viewed": viewed, "title" : title ,
-	        "post_id" : post_id , 'ima': fle , 'time' : timez , 'imz' : imz})
-                return redirect(url_for('feed'))
+            fl = owner.replace("." , "")
+            fjp  = fl + ".jpg"
+
+            imz = "/static/images/"+fl +"/" + fjp
+
+            post_id = md5_crypt.hash(title)
+            da_nam = post_id.replace("." , "")
+            da_nami = da_nam.replace("/" , "")
+            da_name = da_nami[0:10]
+            fle =  "/static/videos/" + new_filename + "." + result
+
+            link_db.insert_one({ "viewed": viewed, "title" : title ,
+                "post_id" : post_id , 'ima': fle , 'time' : timez , 'imz' : imz})
+
+            return redirect(url_for('feed'))
         else:
-                print("fuck")
-    return render_template('post.html')
+            return 'Invalid file or file type not allowed'
+    return render_template('pt.html')
 
 
 @application.route('/my_post/' , methods = ['POST','GET'])
