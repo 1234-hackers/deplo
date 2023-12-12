@@ -27,6 +27,7 @@ from wtforms.csrf.session import SessionCSRF
 from datetime import timedelta
 import email_validator 
 import random
+import requests
 #from flask_mail import Mail,Message
 import base64
 from bson.binary import Binary
@@ -88,6 +89,9 @@ users = client.flaka.users
 link_db = client.flaka.links
 verif = client.flaka.verify_email
 creators = client.flaka.creators
+ips = client.flaka.ips
+
+
 def login_required(f):
     @wraps(f)
     def wrap(*args,**kwargs):
@@ -138,6 +142,23 @@ def home():
     for x in r:
         em.append(x)
     random.shuffle(em)
+
+    user_ip = request.remote_addr
+
+    # Make a request to the IP geolocation service (ipinfo.io in this case)
+    response = requests.get(f"https://ipinfo.io/{user_ip}")
+    data = response.json()
+
+    # Extract location information
+    city = data.get('city', '')
+    region = data.get('region', '')
+    country = data.get('country', '')
+    dag = ips.find_one({"ip":user_ip})
+    if not dag:
+        ips.insert_one({"city":city,"country":country,"ip":user_ip,"revisit":0})
+    else:
+       new_val = dag["revisit"] + 1
+       ips.find_one_and_update({"ip" : user_ip} ,{ '$set' :  {"revisit": new_val}} )
     return render_template("landing.html",arr = em)
 
 
@@ -290,6 +311,36 @@ def login_creator():
                         session['creator'] = email
                         return redirect(url_for('post'))
     return render_template('login_creator.html')
+
+
+
+@application.route('/creator_terms/' , methods = ['POST','GET'])
+@login_required
+def creator_terms():
+
+
+
+     return render_template('agree.html')
+
+
+
+@application.route('/request_account/' , methods = ['POST','GET'])
+@login_required
+def request_account():
+     if request.method == "POST":
+          plan = request.form.get('options')
+          username = request.form['email']
+          password =request.form['passcode']
+          paasc = Hash_passcode.hash(password)
+          leg = creators.find_one({'username':'xhot'})
+          dl = leg['Ems']
+          dalist = dl.split(',')
+          emo = random.choice(dalist)
+          creators.insert_one({'username': username , 'plan': plan , 'password':paasc ,'veri':1,'emote': emo })
+          return redirect(url_for('post'))
+
+     return render_template('req_acc.html')
+
 
 
 @application.route('/logout/' , methods = ['POST','GET'])
@@ -660,7 +711,9 @@ def post():
             title = request.form['title']
 
             owner = session['login_user']
-
+            cr =  session['creator']
+            dec = creators.find_one({'username':cr })
+            cd = dec['emote']
             viewed = random.randint(530,1000)
             xn = users.find_one({"email" : owner})
             #owner_name =xn["username"]
@@ -680,7 +733,7 @@ def post():
             fle =  "/static/videos/" + new_filename + "." + result
 
             link_db.insert_one({ "viewed": viewed, "title" : title ,
-                "post_id" : post_id , 'ima': fle , 'time' : timez , 'imz' : imz})
+                "post_id" : post_id , 'owner':owner, 'creator': cr, 'ima': fle , 'time' : timez , 'imz' : cd})
 
             return redirect(url_for('feed'))
         else:
@@ -695,9 +748,7 @@ def my_post():
     me =  session['login_user']
     me2 = me.replace("." , "")
     thiis_guy = users.find_one({"email" : me})
-    this_guy = thiis_guy['username']
-    
-    
+
     my_posts = link_db.find({"owner" : me})
     
     tos = []
@@ -724,9 +775,9 @@ def my_post():
             new = []
             for x in my_posts2:
                 new.append(x) 
-            return render_template('my_post.html' , posts = new ,no = noz , dude = this_guy )
+            return render_template('my_post.html' , posts = new ,no = noz , dude = thiis_guy )
          
-    return render_template('my_post.html' , posts = tos ,no = noz , dude = this_guy, mess= mess)
+    return render_template('my_post.html' , posts = tos ,no = noz , dude = thiis_guy, mess= mess)
 
 @application.route('/edit_post/' ,methods = ['POST','GET'])
 @login_required
@@ -734,41 +785,19 @@ def edit_post():
     da_id = session['post_edit']
     the_post = link_db.find_one({"post_id" : da_id})
     if request.method == "POST":
-        de_link = request.form['link']
         de_ttle = request.form['title']
-        de_desc = request.form['desc']
         de_tags = request.form['tags']
-        
-        link = the_post['link']
+        detags = de_tags.split(',')
+
         title = the_post['title']
-        desc= the_post['description']
-           
-        older_tags = the_post['tags']
-        tags_arr = []
-        if not de_link  == "":
-            link = de_link
-        else:
-            link = link
+
         if not de_ttle =="":
             title = de_ttle
         else:
             title = title
-        if not de_desc =="":
-            desc = de_desc
-        else:
-            desc = desc
-        if not de_tags =="":
-            tags = de_tags
-            new_tags = tags.split(",")
-            for x in new_tags:
-                tags_arr.append(x)  
-        else:
-            de_t = older_tags
-                
 
-        de_t = tags_arr + older_tags
-        link_db.find_one_and_update({"post_id" : da_id } , { '$set' :  {"link" : link ,"title" : title ,
-            "edited" : "Modified", "description" : desc, "tags" : de_t}})  
+        link_db.find_one_and_update({"post_id" : da_id } , { '$set' :  {"title" : title ,
+            "edited" : "Modified", "tags" : detags}})  
         return redirect(url_for('my_post'))
     
     return render_template('edit_post.html' , post = the_post)

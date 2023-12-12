@@ -13,21 +13,12 @@
   
 <form name="view" method="POST" action="{{ url_for('edit_post') }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-  Link Title
-  <br>
-  <br>
+  
+<h3 style="color:red;"> Caption </h3>
+   <br>
   <input type="text" placeholder = "{{post.title}}" name = "title" class="inputs" >
   <br>
-  <br>
-Link
-<br>
-  <input type="text" placeholder = "{{post.link}}" name = "link" class="inputs" >
-  <br>
-  <br>
-  Description
-<br>
-  <input type="text" placeholder = "{{post.description}}" name = "desc" class="inputs" >
-  <br>
+
   {%for x in post.tags%}
 <ul>
 <li> {{x}}</li>
@@ -35,7 +26,8 @@ Link
 </ul>
   {%endfor%}
 
-Separate the Tags With a comma
+
+<h3 style="color:red;"> Tags separated  With a comma </h3>
 <br>
 
   <textarea type="text" class="inputs" name="tags" id="inbox" placeholder="New Tags separated by , " maxlength 25  rows=" 5" style="margin: 0px; width: 250px; height: 69px;"></textarea>

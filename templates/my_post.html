@@ -10,12 +10,20 @@
 {%for x in posts%}
 
 <h3> {{x.title}}</h3>
-<img src="{{x.ima}}" class="my_post_pic" alt="">
+
+
+{% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+        <img class="my_post_pic" src = "{{x.ima }}" >
+    {% elif x.ima.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg','.3gp')) %}
+        <video width="180" height="100" controls controlsList="nodownload">
+            <source src="{{ x.ima }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>                                                                                         {% endif %}
+
+
 <br>
  {{x.description}}
-<br>
-<br>
-Link {{x.link}}
+
 <br>
 
 <br>

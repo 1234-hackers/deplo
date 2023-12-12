@@ -1,3 +1,4 @@
+
 {% extends "layout.html"%}
 
 {%block body%}
@@ -8,14 +9,14 @@
 
     <div class="posts">
        <div class="owner">
-           <h2>  {{x.imz}} </h2>
-           <div class="name" style= "color: red;   font-family: 'Dancing Script', cursive; "  >
+           <img class="owner_pic" src = "{{x.imz}}">
+           <div class="name">
                {{x.creator}}
            </div>
            
        </div>
-       <div class="desc" style= "color: red;" >
-           {{x.title}} <div class="edited"> {{x.edited}}  </div>
+       <div class="desc" >
+           {{x.title}} <div class="edited"> {{x.edited}} </div>
 
        </div>
     {% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
@@ -35,7 +36,7 @@
 
 <!--                <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>-->
                    <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
-                   <div class="name2" style= "color: red;   font-family: 'Dancing Script', cursive; "  >
+                   <div class="name2" style="font-style: italic;">
                        {{x.viewed}}
                    </div>
                    
