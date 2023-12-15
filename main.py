@@ -11,7 +11,7 @@ import passlib
 from passlib.context import CryptContext
 from passlib.hash import bcrypt_sha256,argon2,ldap_salted_md5,md5_crypt
 import time
-from datetime import  datetime as dt
+from datetime import  datetime
 import smtplib
 from email.message import EmailMessage
 import socket,os
@@ -20,10 +20,9 @@ from gridfs import*
 from bson import ObjectId
 #from flask_hcaptcha import hCaptcha
 from flask_wtf import RecaptchaField,FlaskForm
-from wtforms import *
 from wtforms.validators import EqualTo, InputRequired
 from flask_wtf.csrf import CSRFProtect,CSRFError
-from wtforms.csrf.session import SessionCSRF 
+from wtforms.csrf.session import SessionCSRF
 from datetime import timedelta
 import email_validator 
 import random
@@ -31,9 +30,6 @@ import requests
 #from flask_mail import Mail,Message
 import base64
 from bson.binary import Binary
-#from werkzeug.utils import secure_filename
-#mpsa imports
-#from flask_mpesa import MpesaAPI
 import pyshorteners
 
 import markupsafe
@@ -41,6 +37,20 @@ from markupsafe import escape , Markup
 
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+
+#from moviepy.editor import VideoFileClip
+
+import json
+
+def read_config(file_path):
+    with open(file_path, 'r') as file:
+        config = json.load(file)
+    return config
+
+config_path = 'rev.json'
+config = read_config(config_path)
+
+
 uri = "mongodb+srv://jackson:mutamuta@hbcall.ihz6j.azure.mongodb.net/test?retryWrites=true&w=majority" 
  # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -56,9 +66,9 @@ application = Flask(__name__)
 
 application.config['HCAPTCHA_ENABLED'] =  False
 
-application.config ["HCAPTCHA_SITE_KEY"]  =  "cd654ebc-97ad-44fb-8ddc-963287c6d77b"
+application.config ["HCAPTCHA_SITE_KEY"]  =  config["hsite"]
 
-application.config ['HCAPTCHA_SECRET_KEY'] = "0xb1E280895395797DCF11D0B1807aa9678A4B391d" 
+application.config ['HCAPTCHA_SECRET_KEY'] = config["hsec"]
 
 #hcaptcha = hCaptcha(application)
 #images
@@ -90,6 +100,10 @@ link_db = client.flaka.links
 verif = client.flaka.verify_email
 creators = client.flaka.creators
 ips = client.flaka.ips
+add = client.flaka.adds
+
+dates = client.flaka.dates
+
 
 
 def login_required(f):
@@ -141,6 +155,14 @@ def home():
     em = []
     for x in r:
         em.append(x)
+    current_datetime = datetime.now()
+    current_date = current_datetime.date()
+    de_day = dates.find_one({"day": str(current_date) })
+    if de_day:
+        de_num = de_day["total"] + 1
+        dates.find_one_and_update({"day" : str(current_date)} ,{ '$set' :  {"total": de_num}} )
+    else:
+        dates.insert_one({"day":str(current_date),"total":2})
     random.shuffle(em)
 
     user_ip = request.remote_addr
@@ -695,6 +717,10 @@ def post():
         file = request.files['thumb']
         if file.filename == '':
             return 'No selected file'
+         # Check video length
+        if video_length > 70:
+            return "Video must be one minute or less"
+
         if file and videos.file_allowed(file, file.filename):
             dn = secure_filename(file.filename)
             #filename = videos.save(file)
