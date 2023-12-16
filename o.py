@@ -20,13 +20,13 @@ text_color = (255, 0, 0, 255)  # Red text (RGBA)
 text_position = (50, 50)
 
 # Text to be added
-text = "xxshorts"
+text = "Select campaign picture or video"
 
 # Add the text to the image
 draw.text(text_position, text, fill=text_color)
 
 # Save the image with transparency
-img.save("transparent_image.png", "PNG")
+img.save("ad.png", "PNG")
 
 # Display the image (optional)
 img.show()

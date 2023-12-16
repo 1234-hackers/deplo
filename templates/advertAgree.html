@@ -1,0 +1,87 @@
+
+
+
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<p>
+
+
+**Advertising Terms and Agreement**
+
+This Advertising Terms and Agreement ("Agreement") is entered into by and between the company Xsorts and the advertiser.
+
+<h4>**1. Advertising Rates:**</h4>
+
+   a. **Cost per Reach:** The advertising rate is 1 USD per 100 individuals reached by the advertisement.
+<br>
+   b. **Cost per Click:** The advertising rate is 3 USD per 100 clicks on the advertisement.
+<br>
+   c. **Flat Rate for 24 Hours:** Advertisers have the option to choose a flat rate of 50 USD for a 24-hour advertising period.
+<br>
+<h4>**2. Payment:**</h4>
+
+   a. Payment is due before the commencement of the advertising campaign.
+<br>
+   b. Payments can be made via [Payment Methods  Will Be Agreed  Upon].
+<br>
+<h4>**3. Strick Money Back Policy:**</h4>
+
+   a. If the advertised content is not delivered to the specified audience or fails to meet the agreed-upon metrics, Advertiser is eligible for a full refund.
+<br>
+   b. Advertiser must notify Company within 24 hours of the conclusion of the advertising campaign to claim a refund.
+<br>
+<h4>**4. Campaign Duration:**</h4>
+
+   a. The advertising campaign will commence on payment and conclude on  target reach or on campaign duration ending unless otherwise specified.
+<br>
+<h4>**5. Ad Content:**</h4>
+
+   a. Advertiser is responsible for providing accurate and appropriate content for the advertisement.
+<br>
+   b. Company reserves the right to reject or modify content that violates Company policies or is deemed inappropriate.
+<br>
+<h4>**6. Termination:**</h4>
+
+   a. Either party may terminate this Agreement with a written notice of 1  hour.
+<br>
+   b. In the event of termination, Advertiser will be billed only for services rendered up to the termination date.
+<br>
+<h4>**7. Confidentiality:**</h4>
+
+   a. Both parties agree to keep confidential any proprietary or confidential information disclosed during the course of this Agreement.
+<br>
+<h4>**8. Governing Law:**</h4>
+
+   a. This Agreement shall be governed by and construed in accordance with the laws of the international data act 2015.
+<br>
+By continuing, the parties acknowledge and agree to the terms and conditions outlined in this Advertising Terms and Agreement.
+
+
+
+
+
+
+</p>
+
+
+<style>
+    #install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color:red;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+        text-decoration:none;
+    }
+  </style>
+
+
+<div><a href="{{ url_for('advert') }}" id="install-notification">Agree and Continue </a></div>
+
+{%endblock%}

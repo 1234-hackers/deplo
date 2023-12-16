@@ -854,6 +854,7 @@ overflow: hidden;
     box-sizing: border-box;
     width: 480px;
     text-indent: 3px;
+    color:red;
 }
 
 .iframe

@@ -11,7 +11,7 @@ import passlib
 from passlib.context import CryptContext
 from passlib.hash import bcrypt_sha256,argon2,ldap_salted_md5,md5_crypt
 import time
-from datetime import  datetime
+from datetime import  datetime as dt
 import smtplib
 from email.message import EmailMessage
 import socket,os
@@ -39,6 +39,16 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 #from moviepy.editor import VideoFileClip
+
+import secrets
+from flask_uploads import UploadSet, configure_uploads, DATA
+from werkzeug.utils import secure_filename
+
+
+# Initialize the UploadSet
+videos = UploadSet('videos', extensions=('jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov',
+ 'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpeg', '3gp' ,'mp4', 'avi',
+ 'mov', 'mkv', 'wmv', 'flv', 'webm', '.m4v', '.mpeg', '.3gp'))
 
 import json
 
@@ -76,8 +86,8 @@ upload_folder = 'static/images'
 application.config['UPLOAD_FOLDER'] = upload_folder
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
-
-
+application.config['UPLOADED_VIDEOS_DEST'] = 'static/videos'
+configure_uploads(application,videos)
 #csrf protection
 SECRET_KEY = "dsfdsjgdjgdfgdfgjdkjgdg"
 csrf = CSRFProtect(application)
@@ -150,12 +160,23 @@ def re_sess(f):
            
 @application.route('/',methods = ["POST","GET"])
 def home():
+    advs = add.find({"active" : 1}).limit(500)
     r = link_db.find({}).limit(500)
-    to_show = []
     em = []
     for x in r:
         em.append(x)
-    current_datetime = datetime.now()
+
+    r2 = random.sample(em, 1)
+    to_show = []
+    for x in r2:
+        em.append(x)
+        views = x['viewed']
+        idn = x['_id']
+        new = int(views)
+        ran = random.randint(1,2)
+        new_val = new + ran
+        link_db.find_one_and_update({"_id" : idn} ,{ '$set' :  {"viewed": new_val}} )
+    current_datetime = dt.now()
     current_date = current_datetime.date()
     de_day = dates.find_one({"day": str(current_date) })
     if de_day:
@@ -174,14 +195,30 @@ def home():
     # Extract location information
     city = data.get('city', '')
     region = data.get('region', '')
-    country = data.get('country', '')
+#    country = data.get('country', '').upper()
+    country = 'kenya'
     dag = ips.find_one({"ip":user_ip})
+    for xz in advs:
+        if xz['country'] == country:
+            to_show.append(xz)
+        if xz['country'] == 'global':
+            to_show.append(xz)
     if not dag:
         ips.insert_one({"city":city,"country":country,"ip":user_ip,"revisit":0})
     else:
        new_val = dag["revisit"] + 1
        ips.find_one_and_update({"ip" : user_ip} ,{ '$set' :  {"revisit": new_val}} )
-    return render_template("landing.html",arr = em)
+    de_adds = random.sample(to_show, 1)
+    for x in de_adds:
+        views = x['reach']
+        idn = x['_id']
+        new = int(views)
+        new_val = new + 1
+        add.find_one_and_update({"_id" : idn} ,{ '$set' :  {"reach": new_val}} )
+    ts = de_adds + em
+    random.shuffle(ts)
+
+    return render_template("landing.html",arr = ts)
 
 
 def reset_session_required(f):
@@ -204,16 +241,7 @@ def  reset_pass():
         if existing:
 
             '''
-            postmark = PostmarkClient(server_token='POSTMARK-SERVER-API-TOKEN-HERE')
-
-# Send an email
-postmark.emails.send(
-  From='sender@example.com',
-  To='recipient@example.com',
-  Subject='Postmark test',
-  HtmlBody='HTML body goes here'
-)
-            Send message here with the code
+            Send message here with the co7de
             '''
             now = dt.now()
             r_now =  now.strftime("Date  %Y:%m:%d: Time %H:%M:%S")
@@ -302,7 +330,7 @@ def login():
                 if Hash_passcode.verify(passcode,existing_pass):
                     username = existing_user['email']
                     if username in session:
-                        if v == 0 :
+                        if v == '0' :
                              return redirect(url_for('complete_regist'))
                         else:
                             return redirect(url_for('feed'))
@@ -346,11 +374,21 @@ def creator_terms():
 
 
 
+@application.route('/advertising_terms/' , methods = ['POST','GET'])
+@login_required
+def advertising_terms():
+
+
+
+     return render_template('advertAgree.html')
+
+
+
+
 @application.route('/request_account/' , methods = ['POST','GET'])
 @login_required
 def request_account():
      if request.method == "POST":
-          plan = request.form.get('options')
           username = request.form['email']
           password =request.form['passcode']
           paasc = Hash_passcode.hash(password)
@@ -358,7 +396,7 @@ def request_account():
           dl = leg['Ems']
           dalist = dl.split(',')
           emo = random.choice(dalist)
-          creators.insert_one({'username': username , 'plan': plan , 'password':paasc ,'veri':1,'emote': emo })
+          creators.insert_one({'username': username ,  'password':paasc ,'veri':1,'emote': emo })
           return redirect(url_for('post'))
 
      return render_template('req_acc.html')
@@ -459,7 +497,8 @@ def feed():
         views = x['viewed']
         idn = x['_id']
         new = int(views)
-        new_val = new + 1
+        ran = random.randint(9,13)
+        new_val = new + ran
         link_db.find_one_and_update({"_id" : idn} ,{ '$set' :  {"viewed": new_val}} )
 
     #view link functionality
@@ -666,46 +705,59 @@ def view_link():
 def advert():
     advert_db = client.flaka.adverts 
     if request.method == "POST":
-        
-        title = request.form['title']
-        
-        description = request.form['description']
+        if 'thumb' not in request.files:
+            return 'No file part'
+        file = request.files['thumb']
+        if file.filename == '':
+            return 'No selected file'
+         # Check video length
+#       if video_length > 70:
+#            return "Video must be one minute or less"
 
-        pic = request.files['img']
-        
-        plan = request.form.get("plan")
-        if plan == "1":
-            the_plan = "two_dollar"
-        if plan == "2":
-            plan = "five_dollar"
-        if plan == "3":
-            the_plan  = "12_dollar"
-        if plan == "4":
-            plan = "fifty_dollar"
-        
-        filename = secure_filename(pic.filename)
-        def allowed_file(filename):
-            return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS       
-        if allowed_file(filename):
-            pic.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
-            image = upload_folder +  "/" + filename
-            with open(image , "rb") as image2string:
-                converted_string = base64.b64encode(image2string.read())
-                uploa = converted_string.decode('utf-8')        
-        advert_db.insert_one({"title" : title , "desc" : description , "ad_pic" : uploa , 
-                             "plan" : plan })        
-    
+        if file and videos.file_allowed(file, file.filename):
+            dn = secure_filename(file.filename)
+            #filename = videos.save(file)
+            th = request.files['thumb']
+            filename = th.filename
+            delimeter = "."
+            result = filename.split(delimeter, 1)[-1].strip()
+            random_string = secrets.token_hex(13)
+            new_filename = f"{random_string}"
+            file.save(os.path.join(application.config['UPLOADED_VIDEOS_DEST'], new_filename + "." + result))
+
+
+            title = request.form['title']
+            link = request.form['link']
+            countr = request.form['ct'].upper()
+            owner = session['login_user']
+            viewed = random.randint(5,12)
+            xn = users.find_one({"email" : owner})
+            #owner_name =xn["username"]
+            now = dt.now()
+            now_c = now.strftime("Time  %Y:%m:%d: , %H:%M:%S")
+            timez = now_c
+
+            fl = owner.replace("." , "")
+            fjp  = fl + ".jpg"
+
+            imz = "/static/images/"+fl +"/" + fjp
+
+            post_id = md5_crypt.hash(title)
+            da_nam = post_id.replace("." , "")
+            da_nami = da_nam.replace("/" , "")
+            da_name = da_nami[0:10]
+            if countr == '':
+                ctry = 'global'
+            else:
+               ctry = countr
+            fle =  "/static/videos/" + new_filename + "." + result
+
+            add.insert_one({"country" : ctry , 'active':1,'reach' : 1, "title" : title ,'link' : link,'ima': fle , 'time' : timez })
+            return redirect(url_for('feed'))
+        else:
+            return 'Invalid file or file type not allowed'
+
     return render_template('advert.html')
-
-import secrets
-from flask_uploads import UploadSet, configure_uploads, DATA
-from werkzeug.utils import secure_filename
-application.config['UPLOADED_VIDEOS_DEST'] = 'static/videos'
-
-
-# Initialize the UploadSet
-videos = UploadSet('videos', extensions=('jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpeg', '3gp' ,'mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm', '.m4v', '.mpeg', '.3gp'))
-configure_uploads(application, videos)
 
 @application.route('/post/', methods=['GET', 'POST'])
 @login_required
@@ -718,8 +770,8 @@ def post():
         if file.filename == '':
             return 'No selected file'
          # Check video length
-        if video_length > 70:
-            return "Video must be one minute or less"
+#       if video_length > 70:
+#            return "Video must be one minute or less"
 
         if file and videos.file_allowed(file, file.filename):
             dn = secure_filename(file.filename)
@@ -740,7 +792,7 @@ def post():
             cr =  session['creator']
             dec = creators.find_one({'username':cr })
             cd = dec['emote']
-            viewed = random.randint(530,1000)
+            viewed = random.randint(5,12)
             xn = users.find_one({"email" : owner})
             #owner_name =xn["username"]
             now = dt.now()
