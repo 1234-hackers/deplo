@@ -478,7 +478,8 @@ def register():
         if passc == passc2  and not registered:
           favs = []
           tags = []
-          users.insert_one({"email":email  , "password":hashed ,"creator" : "no" , "verified" :0 ,
+          users.insert_one({"email":email  , "password":hashed , 
+                             "favs" : favs , "tags" : tags , "verified" :0 ,
  'saved' : [], "viewed" :[] ,"posts" : 0  })
             
           if users.find_one({"email":email}):
