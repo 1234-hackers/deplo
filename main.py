@@ -1,6 +1,11 @@
 import base64
 from email import message
 #from turtle import st
+
+import dns.resolver
+dns.resolver.default_resolver=dns.resolver.Resolver(configure=False)
+dns.resolver.default_resolver.nameservers=['8.8.8.8']
+
 from dns.message import Message
 from flask import Flask, render_template, url_for, request, redirect,flash,session
 from flask.scaffold import F
@@ -156,8 +161,36 @@ def re_sess(f):
             time.sleep(2)
             return redirect(url_for('login'))
     return wrap
-    
-           
+
+
+def send_mail(rec,code):
+    recipient = rec
+    code = code
+    email_body = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>Email Confirmation</title>
+</head>
+<body style ="font-size: 20px;">
+<p>You have received this email because it was used to create an account.If
+this wasn't you please ignore it.
+
+<br>
+{}
+</p>
+
+</p>
+</body>
+</html>
+     """.format(code)
+
+    email_command = f'mail -a "Content-Type: text/html" -s "Appreciation" {recipient} <<EOF'
+    full_email = email_command + email_body
+    os.system(full_email)
+    return 'ok'
+
+
 @application.route('/',methods = ["POST","GET"])
 def home():
     advs = add.find({"active" : 1}).limit(500)
@@ -394,11 +427,18 @@ def request_account():
           paasc = Hash_passcode.hash(password)
           leg = creators.find_one({'username':'xhot'})
           dl = leg['Ems']
+          d_user = session['login_user']
           dalist = dl.split(',')
           emo = random.choice(dalist)
-          creators.insert_one({'username': username ,  'password':paasc ,'veri':1,'emote': emo })
-          return redirect(url_for('post'))
+          ex = users.find_one({"email" : d_user})
+          ex_t = ex["creator"]
+          if not ex_t  == "yes":
 
+              creators.insert_one({'username': username ,  'password':paasc ,'veri':1,'emote': emo })
+              users.find_one_and_update({"email" : d_user} ,{ '$set' :  {"creator": "yes"}} )
+              return redirect(url_for('post'))
+          else:
+              return "Account Already Exists"
      return render_template('req_acc.html')
 
 
@@ -439,7 +479,8 @@ def register():
           favs = []
           tags = []
           users.insert_one({"email":email  , "password":hashed , 
-                             "favs" : favs , "tags" : tags , "verified" :0 , 'saved' : [], "viewed" :[]  })
+                             "favs" : favs , "tags" : tags , "verified" :0 ,
+ 'saved' : [], "viewed" :[] ,"posts" : 0  })
             
           if users.find_one({"email":email}):
                 code = random.randint(145346 , 976578)
@@ -448,6 +489,7 @@ def register():
                 if not verif.find_one({"email" : email}):
                     verif.insert_one({"email" : email , "code" : code })
                     #send the code Here
+                    send_mail(email,code)
                     return redirect(url_for('complete_regist'))
                 else:
                     return redirect(url_for('complete_regist'))
@@ -713,7 +755,7 @@ def advert():
          # Check video length
 #       if video_length > 70:
 #            return "Video must be one minute or less"
-
+        owner = session['login_user']
         if file and videos.file_allowed(file, file.filename):
             dn = secure_filename(file.filename)
             #filename = videos.save(file)
@@ -729,7 +771,6 @@ def advert():
             title = request.form['title']
             link = request.form['link']
             countr = request.form['ct'].upper()
-            owner = session['login_user']
             viewed = random.randint(5,12)
             xn = users.find_one({"email" : owner})
             #owner_name =xn["username"]
@@ -772,8 +813,11 @@ def post():
          # Check video length
 #       if video_length > 70:
 #            return "Video must be one minute or less"
+        owner = session['login_user']
+        less = users.find_one({"email" : owner})["posts"]
 
-        if file and videos.file_allowed(file, file.filename):
+
+        if file and videos.file_allowed(file, file.filename) and less < 10:
             dn = secure_filename(file.filename)
             #filename = videos.save(file)
             th = request.files['thumb']
@@ -812,11 +856,22 @@ def post():
 
             link_db.insert_one({ "viewed": viewed, "title" : title ,
                 "post_id" : post_id , 'owner':owner, 'creator': cr, 'ima': fle , 'time' : timez , 'imz' : cd})
-
+            p_num = xn["posts"] + 1
+            users.find_one_and_update({'email' : owner}  ,{ '$set' :  {'posts': p_num}})
             return redirect(url_for('feed'))
         else:
             return 'Invalid file or file type not allowed'
     return render_template('pt.html')
+
+
+
+
+
+
+
+
+
+
 
 
 @application.route('/my_post/' , methods = ['POST','GET'])
