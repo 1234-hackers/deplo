@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  
+</head>
+<title>xxshorts</title>
+
+<body class="main_body" style="background-color:#071330; width: fit-content; color: red;">
+    <div class="site_pic">
+      </div>
+<!-- Nav BAR-->
+    <div class="topbar">
+<a class="side_menu_items" style= "text-decoration: none;" href="{{ url_for('feed') }}">
+<h1 class="waka"> xxshorts</h1>        
+</a>
+    </div>
+
+
+<!-- main container starts here -->
+<!-- SIDE BAR-->
+<div class="main_container">
+
+<!-- MAIN CONTAINER-->
+<div class="middle">
+    {% block body %}
+    
+    {% endblock %}
+
+
+
+</div>
+</div>
+
+</body>
+
+</html>

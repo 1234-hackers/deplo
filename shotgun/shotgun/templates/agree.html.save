@@ -1,0 +1,81 @@
+
+
+
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<p>
+
+Content Creation Agreement
+<br><br>
+This Content Creation Agreement ("Agreement") is entered into by and between XSots, hereinafter referred to as the "Company," and the content creator, hereinafter referred to as the "Creator."
+<br>
+<h4>1. Content Creation and Compensation</h4>
+
+1.1 The Creator agrees to produce and submit 100 posts (hereinafter referred to as "Posts") to XSots' platform within one year from the date of agreement.
+1.2 In consideration for the creation of the aforementioned 100 Posts, the Creator agrees to pay XSots a fee of 10 USD.
+<br>
+1.3 Alternatively, the Creator may opt for the Half-Year plan, entitling them to submit an unlimited number of Posts during the one-year period, in exchange for a one-time payment of 10 USD.
+<br>
+1.4 The Creator may also choose the lifetime plan, granting them the ability to submit an unlimited number of Posts throughout their lifetime, for a one-time payment of 50 USD.
+<br>
+<h4>2. Copyright and Intellectual Property</h4>
+2.1 The Creator acknowledges that all content submitted to XSots' platform, including but not limited to text, images, audio, and video (hereinafter collectively referred to as "Content"), shall remain the intellectual property of the Creator.
+<br>
+2.2 The Creator grants XSots a non-exclusive, royalty-free, worldwide license to use, reproduce, modify, and distribute the Content solely for the purpose of promoting, operating, and improving XSots' platform.
+<br>
+2.3 The Creator agrees not to reproduce, distribute, or display the Content outside of XSots' platform without obtaining written consent from XSots.
+<br> 
+2.4 Copyrighted material may lead to a significant reduction in views, ranging from 50% to 70%. It's crucial to respect intellectual property rights and adhere to content guidelines  
+<br>
+<h4>3. Payment Terms</h4>
+
+3.1 Payment shall be made by the Creator to XSots within 7 days of the execution of this Agreement.
+<br>
+3.2 The Unlimited  plan fee of 50 USD shall be paid by the Creator to XSots within 30 days of the execution of this Agreement.
+<br>
+<h4>4. Media Regulations and Compliance</h4>
+
+4.1 The Creator agrees to adhere to all applicable laws and regulations governing media content, including but not limited to copyright laws, privacy laws, and any other relevant legislation.
+<br>
+4.2 The Creator warrants that all Posts submitted to XSots' platform comply with the Company's content guidelines and do not infringe upon the rights of any third party.
+
+<br>
+<h4>5. Revenue  </h4>
+5.1 A creator is  is eligible to earn  when the cumulative engagement reaches 500k across all posts, meeting the threshold requirement.
+<br>
+5.2 Once surpassing 500k views, the creator earns $3 per 1000 views. Earnings can be accessed every 14 days, providing a regular payout schedule for content performance.
+<br>
+
+
+
+<h4>6. Termination</h4>
+
+6.1 Either party may terminate this Agreement with written notice to the other party if a breach of any provision occurs.
+ <br>
+
+
+</p>
+
+
+<style>
+    #install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color:red;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+        text-decoration:none;
+    }
+  </style>
+
+
+<div><a href="{{ url_for('request_account') }}" id="install-notification">I Agree </a></div>
+
+{%endblock%}
+--

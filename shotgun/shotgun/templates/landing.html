@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="keywords" content="xxx,xxnx,porncum, cum,ass,thick,leak,bubble,boobs,ebony,black,latina">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link id="demo" href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link  href="{{ url_for('static', filename='js/mani.json') }}" rel="manifest">
+ <title>xxshorts</title>
+<link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+<body class="main_body" style="background-color:#071330; width: fit-content; color: red;">
+
+
+<div class="topbar">
+<a class="side_menu_items" style= "text-decoration: none;" href="{{ url_for('feed') }}">
+<h1 class="waka"> xxshorts</h1>
+</a>
+    </div>
+<div class="landing_home">
+
+    
+    <!-- MAIN CONTAINER-->
+    <div class="miccddle1">
+       
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+ <div class="middle">
+            <div class="home_cont">
+           
+                {%for x in arr%}
+            
+                <div class="posts">
+                   <div class="owner">
+
+                       {{x.imz}}
+
+                       <div class="name" style= "color: red;   font-family: 'Dancing Script', cursive; "  >
+                           {{x.creator}}
+                       </div>
+                       
+                   </div>
+                   <div class="desc">
+                       {{x.title}} <div class="edited"> {{x.edited}} </div>
+                   </div>
+            
+                   {% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+        <img class="post_pic" src = "{{x.ima }}" >
+    {% elif x.ima.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg','.3gp')) %}
+        <video width="490" height="300" controls controlsList="nodownload">
+            <source src="{{ x.ima }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>                                                                                         {% endif %}
+
+                   <div class="form_cl">
+                    {{x.link}}
+                    <br>
+                           <div  class="owner">
+                            
+                               <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                               <div class="name" style= "color: red;   font-family: 'Dancing Script', cursive; "   >
+                                   {{x.viewed}}
+                               </div>
+                               
+                           </div>
+                          
+                   </div>
+  
+  <script>
+    function openIframe() {
+    var lik = "{{x.link}}"
+        
+      var iframe = document.createElement('iframe');
+      iframe.src = lik  // Replace with your desired URL
+      iframe.width = '500';
+      iframe.height = '300';
+      document.body.appendChild(iframe);
+    }
+  </script>
+                   </div>
+                   {%endfor%}
+                    </div>
+        </div>
+    
+    
+
+    </div>
+<style>
+    #install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: red;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+	text-decoration:none;
+    }
+  </style>
+<div><a href="{{ url_for('login') }}" id="install-notification">Log In</a></div>
+
+</div>
+
+<script>
+    setTimeout(function() {
+  window.location.href = "{{ url_for('login') }}"; // Replace with the desired URL
+}, 300000); // Replace 5000 with the desired delay in milliseconds (e.g., 5000 for 5 seconds)
+
+</script>
+</body>
+
+
+
+
+
+
+
+
+</html>

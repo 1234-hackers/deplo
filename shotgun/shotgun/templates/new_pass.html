@@ -1,0 +1,29 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<div class="login-container">
+    <div class="login-banner">
+
+            <form method=POST action="{{ url_for('peopleass') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <h4>
+                Create New Password
+                </h4>
+                <br>
+
+                <input required type="password" minlength="8" class="inputs" name="pas1" placeholder="Password" />
+<br>
+{{mes}}
+<br>
+                <input required type="text" minlength="8" class="inputs" name="pas2" placeholder="Confirm Password" />
+                <br>
+                <br>
+
+                <input type="submit" class="vis_button" value="Done" />
+            </form>
+        </div>
+    </div>
+
+    {%endblock%}

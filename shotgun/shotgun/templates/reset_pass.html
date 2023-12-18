@@ -1,0 +1,18 @@
+{% extends "layout.html"%}
+
+{%block body%}  
+<div class="login-container">
+    <div class="login-banner">
+            <form method="POST" action="{{ url_for('reset_pass') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <h5>
+                    Change  password
+                </h5>
+                <h3>Enter Your Email</h3>
+                <input type="email" class="inputs" name="email" placeholder="Your Account Email" />
+                <input type="submit" class="vis_button" value="Send" />
+            </form>
+        </div>
+    </div>
+
+    {%endblock%}

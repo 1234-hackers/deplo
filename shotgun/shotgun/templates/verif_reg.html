@@ -1,0 +1,23 @@
+{% extends "layout.html"%}
+
+{%block body%}
+<div class="login-container">
+    <div class="login-banner">
+        Verify Your Email Please
+    </div>
+
+
+{{m}}
+<form method="POST" action= "{{ url_for('complete_regist') }}"> 
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+   
+    <br>
+    <input type="text" name = "code" placeholder="Verification Code" class="inputs" >
+    <br>
+    <button class="vis_button" type="submit" >Verify Email</button>
+</form>
+</div>
+
+
+
+{%endblock%}

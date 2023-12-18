@@ -1,0 +1,71 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+<div class="home_cont">
+
+ 
+<img class="profile_users2" src = "{{nn}}"  >
+<br>
+        <br>
+<button class="sub_btn"> <a href="{{ url_for('my_post') }}" style="text-decoration: none; color: aliceblue;"> Posts </button></a>
+
+        <p/>
+        <br>
+        
+  <div align="center">
+<p class="heads">
+   
+</p>
+    <button class="sub_btn"> <a href="{{ url_for('post') }}" style="text-decoration: none; color: aliceblue;"> Post + </button></a>
+<div class="tags">
+
+<form name="view" method="POST" action="{{ url_for('topics') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>  
+    <br>
+    {%for x in tags%}
+        <input type="submit" name="sub" class="tags_prof" value="{{x}}">
+    {% endfor %}
+    </form>
+</div>
+
+
+
+  {%for x in more%}
+
+  <div class="posts">
+     <div class="owner">
+         <img class="owner_pic" src = "{{x.imz}}">
+         <div class="name">
+             {{x.owner_name}}
+         </div>
+         
+     </div>
+     <div class="desc">
+         {{x.description}}  
+     </div>
+
+     <img class="post_pic" src = "{{x.ima }}" >
+     <div class="form_cl">
+      {{x.link}}
+      <br>
+             <div  class="owner">
+              <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>
+                 <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                 <div class="name">
+                     {{x.viewed}}
+                 </div>
+                 
+             </div>
+            
+     </div>
+   
+     </div>
+     {%endfor%}
+
+
+</div>
+</div>
+</div>
+
+{%endblock%}
