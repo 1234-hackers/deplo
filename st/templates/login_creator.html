@@ -1,0 +1,78 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+<link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+
+<body class="main_body" style="background-color:#071330; width: fit-content; color: red;">
+    
+    <div class="site_pic">
+        <label>
+           <a class="side_menu_items" href="{{ url_for('feed') }}">
+            <title>xxshorts</title>
+                <image class="lks"  src="{{url_for('static',filename = 'favcon.ico')}}" >
+                </a>
+
+          </label>
+          <br>
+          <h1 class="waka"> xxshorts</h1>
+      </div>
+<!-- Nav BAR-->
+
+
+
+<div class="login-container">
+    <div class="login-banner">
+    Creator Auth
+    </div>
+    <form method="POST" action=  "/login_creator/">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="formr">
+        <label for="username">Username
+            <br>
+        <input name="user" type="text" required class="inputs" Placeholder="Creator Username">
+    </label>
+      <br>
+      <br>
+      <label for="password">Password
+        <br>
+        <input name="passcode" type="password" maxlength="50" minlength="8" required class="inputs"  Placeholder="Password">
+    </label>
+
+    <label>
+         <br>
+         <br>
+        <button type="submit" class="vis_button"> Log In</button>
+
+        </a>
+
+    </label>
+
+
+</form>
+<br>
+<br>
+
+<a href="{{ url_for('creator_terms') }}" style="text-decoration: none;"> Become a Creator </a>
+        <br>
+
+
+<br>
+<br>
+
+<a href="{{ url_for('advertising_terms') }}" style="text-decoration: none;"> Advertise With Us </a>
+
+        </div>
+
+
+</div>
+
+</body>
+
+</html>

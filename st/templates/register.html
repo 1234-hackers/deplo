@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet"> 
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+  </head>
+
+
+<body class="main_body" style="background-color:#071330; width: fit-content; color: red;">
+
+    <div class="site_pic">
+        <label>
+           <a class="side_menu_items" href="{{ url_for('feed') }}"> 
+            
+                <image class="lks"  src="{{url_for('static',filename = 'favcon.ico')}}" >
+                </a>
+               
+          </label>
+          <br>
+          <h1 class="waka"> xxshorts</h1>
+      </div>
+<!-- Nav BAR-->
+
+
+
+
+<div class="login-container">
+    <div class="login-banner">
+    Welcome 
+    </div>
+    <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data"   >
+  
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <div >
+    <input name="email"  placeholder="Email" type="email" class="inputs">
+    <br>
+    <br>
+    </div>
+    
+    <input name="passc" aria-required maxlength="60" minlength="8"  placeholder="Password [At least 8 mexed characters]" type="password" class="inputs">
+    <br>
+    <br>
+    <input name="passc2"  ari-required  maxlength="60" minlength="8"   placeholder="Repeat Password" type="password" class="inputs">
+    <br>
+      
+    <br>
+    <br>
+    
+    
+        <button type="submit"  class="vis_button" >Register</button>
+    </form>
+
+
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+{% extends "layout.html"%}
+
+{%block body%}
+<div class="login-container">
+    {{ mail}}
+             
+<div align="center">
+
+    
+
+    <form name="view" method="POST" action="{{ url_for('choose_tags') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+     
+        <div class="em_tgs">
+        {% for x in tags%}
+       
+        <label class="onc">
+            
+            <input type="checkbox"name="tags" value="{{x}}" style="display: none;">  
+
+       <h2 class="tag_names" >  {{x}}</h2>
+
+    </label>
+ 
+        </script>
+        {%endfor%}
+    </div>
+<br>
+
+<br>
+        <button type="submit" class="sub_btn" >Done</button>
+    
+        </form>
+
+        
+
+</div>
+</div>
+
+
+
+
+{%endblock%}

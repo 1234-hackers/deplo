@@ -1,0 +1,57 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+<div class="home_cont">
+
+    <div class="fullform" align ="center">
+    <form method="POST" action="{{ url_for('advert') }}"  enctype="multipart/form-data" >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+
+
+
+          <script>
+            function previewFile(input) {
+              var file = input.files[0];
+
+              if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function() {
+                  document.getElementById("previewImg").src = reader.result;
+                };
+
+                reader.readAsDataURL(file);
+              }
+            }
+          </script>
+
+
+
+
+
+    <br>
+        <br>
+
+    <input name="title" id="title" maxlength="30" placeholder="Product or service name" type="text" class="inputs">
+        <br>
+        <br>
+
+<input name="link" id="link" maxlength="200" placeholder="External Link" type="text" class="inputs">
+        <br>
+        <br>
+<input name="ct"  maxlength="30" placeholder="Target Country,blank for global " type="text" class="inputs">
+        <br>
+        <br>
+            </fieldset>
+            <br><br>
+
+    <button class="sub_btn" type="submit">Request</button>
+              <br>
+              <br>
+    </form>
+
+    </div>
+
+{%endblock%}

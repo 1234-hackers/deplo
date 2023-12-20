@@ -1,0 +1,72 @@
+
+{% extends "layout.html"%}
+
+{%block body%}
+
+<div class="home_cont">
+   
+    {%for x in arr%}
+
+    <div class="posts">
+       <div class="owner">
+           <img class="owner_pic" src = "{{x.imz}}">
+           <div class="name">
+               {{x.creator}}
+           </div>
+           
+       </div>
+       <div class="desc" >
+           {{x.title}} <div class="edited"> {{x.edited}} </div>
+
+       </div>
+    {% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+        <img class="post_pic" src = "{{x.ima }}" >
+    {% elif x.ima.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg', '.3gp')) %}
+        <video width="490" height="300" controls controlsList="download">
+            <source src="{{ x.ima }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% endif %}
+
+    
+       <div class="form_cl">
+        <p style="font-style: italic;"> {{x.link}}</p>
+        <br>
+               <div  class="owner">
+
+<!--                <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>-->
+                   <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                   <div class="name2" style="font-style: italic;">
+                       {{x.viewed}}
+                   </div>
+                   
+               </div>
+              
+       </div>
+     
+       </div>
+
+       {%endfor%}
+
+<style>
+    #install-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color:red;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+        text-decoration:none;
+    }
+  </style>
+       
+   
+<div><a href="{{ url_for('post') }}" id="install-notification">Post + </a></div>
+
+        </div>
+     
+   
+
+{%endblock%}

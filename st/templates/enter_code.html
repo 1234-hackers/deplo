@@ -1,0 +1,28 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+
+<div class="login-container">
+    <div class="login-banner">
+
+            <form method=POST action="{{ url_for('enter_code') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <h4>
+                Please Enter Code Sent Via Email 
+                </h4>
+                <h3>Enter Code Here</h3>
+                <br>
+                {% for message in get_flashed_messages() %}
+                {{  message }}
+                {% endfor %}
+                <br>
+
+                <input required type="text" class="inputs" name="code" placeholder="Verification Code" />
+                <br>
+                <input type="submit" class="vis_button" value="Send" />
+            </form>
+        </div>
+    </div>
+
+    {%endblock%}

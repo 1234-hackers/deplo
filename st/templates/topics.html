@@ -1,0 +1,49 @@
+{% extends "layout.html"%}
+
+{%block body%}
+
+    <div class="home_cont">
+        {%for x in t%}
+    
+        <div class="posts">
+           <div class="owner">
+               <img class="owner_pic" src = "{{x.imz}}">
+               <div class="name_1">
+                   {{x.owner_name}}
+               </div>
+               
+           </div>
+           <div class="desc">
+               {{x.description}}  
+           </div>
+    
+           <img class="post_pic" src = "{{x.ima }}">
+           <div class="form_cl">
+    
+               <form method="POST" action="{{ url_for('feed') }}">
+                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                   <input type="hidden" name="id" value="{{x.post_id}}">  
+    
+                   <div class="owner">
+                       <input type="submit" class="sub_btn"  name="sub" value="View">
+                       <img class="owner_pic" src="{{url_for('static',filename = 'imgs/stats.png')}}">
+                       <div class="name">
+                           22
+                           {% for y in x.tags%}
+                       {{y}}
+                        {%endfor%} 
+                       </div>
+                                             
+                   </div>
+                   </form>
+                  
+           </div>
+         
+         
+    
+    
+           
+        </div>
+        {%endfor%}
+</div>
+{%endblock%}

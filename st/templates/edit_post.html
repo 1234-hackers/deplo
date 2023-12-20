@@ -1,0 +1,45 @@
+{% extends "layout.html"%}
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+      }
+</script>
+
+
+{%block body%}
+
+<div class="home_cont">
+ 
+  
+<form name="view" method="POST" action="{{ url_for('edit_post') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  
+<h3 style="color:red;"> Caption </h3>
+   <br>
+  <input type="text" placeholder = "{{post.title}}" name = "title" class="inputs" >
+  <br>
+
+  {%for x in post.tags%}
+<ul>
+<li> {{x}}</li>
+
+</ul>
+  {%endfor%}
+
+
+<h3 style="color:red;"> Tags separated  With a comma </h3>
+<br>
+
+  <textarea type="text" class="inputs" name="tags" id="inbox" placeholder="New Tags separated by , " maxlength 25  rows=" 5" style="margin: 0px; width: 250px; height: 69px;"></textarea>
+
+<br>
+<br>
+
+  <input type="submit" name="sub" class="sub_btn" value="Done">
+
+
+  </form>
+
+
+</div>
+{%endblock%}

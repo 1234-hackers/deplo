@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="s>
+  <link id="demo" href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+  <link  href="{{ url_for('static', filename='js/mani.json') }}" rel="manifest">
+ <title>xxshorts</title>
+<link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-aw>
+  </head>
+
+<body class="main_body" style="background-color:#071330; width: fit-content; color: red;">
+                                                                                                     
+<div class="topbar">
+<a class="side_menu_items" style= "text-decoration: none; color: red;  " href="{{ url_for('feed') }}">
+<h1 class="waka"> xxshorts</h1>
+</a>
+    </div>
+<!-- Nav BAR-->
+ 
+
+<!-- MAIN CONTAINER-->
+<div class="middle">
+   
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="home_cont">
+
+
+<div align="center">
+
+
+      <div style="font-size: 19px;">
+        Are You Sure You Want To Log Out
+        </div>
+    <form name="view" method="POST" action="{{ url_for('logout') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <br>
+      <br>
+        <input type="submit" value="Yes" name="sub" class="sub_btn">
+        <input type="submit"class="sub_btn" name="sub"  value="No">
+    
+    </form>
+
+
+</div>
+</div>
+
+
+
+
+
+
+</div>
+</div>
+
+</body>
+
+</html>

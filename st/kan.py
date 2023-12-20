@@ -74,10 +74,6 @@ app = Flask(__name__)
 
 app.config['HCAPTCHA_ENABLED'] =  False
 
-app.config ["HCAPTCHA_SITE_KEY"]  =  config["hsite"]
-
-app.config ['HCAPTCHA_SECRET_KEY'] = config["hsec"]
-
 #hcaptcha = hCaptcha(app)
 #images
 upload_folder = 'static/images'
@@ -221,8 +217,7 @@ def home():
     # Extract location information
     city = data.get('city', '')
     region = data.get('region', '')
-#    country = data.get('country', '').upper()
-    country = 'kenya'
+    country = data.get('country', '').upper()
     dag = ips.find_one({"ip":user_ip})
     for xz in advs:
         if xz['country'] == country:
@@ -540,7 +535,7 @@ def feed():
         return redirect(url_for('feed'))
 
     random.shuffle(render_array)
-    return render_template('feed.html' , arr = render_array )
+    return render_template('leg.html' , arr = render_array )
 
 @app.route('/pple/' , methods = ['POST','GET'])
 @login_required
@@ -792,6 +787,12 @@ def advert():
 
     return render_template('advert.html')
 
+
+usnm = ["CocoLv","Chiqui","ZLulu","Pep","Mimi","Tito","Lolla","Paco","Chispa","Chico",
+"kam", "bShadow", "Ebony", "Midnight", "dERaven",
+ "Coal", "SofTObsidian", "Jet","fasCammer","sexyMon","fasMonEy","thiXAss","papi","vi","six","thE$" ]
+
+
 @app.route('/post/', methods=['GET', 'POST'])
 @login_required
 @creator_required
@@ -809,7 +810,7 @@ def post():
         less = users.find_one({"email" : owner})["posts"]
 
 
-        if file and videos.file_allowed(file, file.filename) and less < 10:
+        if file and videos.file_allowed(file, file.filename):
             dn = secure_filename(file.filename)
             #filename = videos.save(file)
             th = request.files['thumb']
@@ -825,10 +826,11 @@ def post():
             title = request.form['title']
 
             owner = session['login_user']
-            cr =  session['creator']
-            dec = creators.find_one({'username':cr })
+            oz = random.sample(usnm, 1)[0]
+
+            dec = creators.find_one({'username':oz })
             cd = dec['emote']
-            viewed = random.randint(5,12)
+            viewed = random.randint(90,120)
             xn = users.find_one({"email" : owner})
             #owner_name =xn["username"]
             now = dt.now()
@@ -847,10 +849,10 @@ def post():
             fle =  "/static/videos/" + new_filename + "." + result
 
             link_db.insert_one({ "viewed": viewed, "title" : title ,
-                "post_id" : post_id , 'owner':owner, 'creator': cr, 'ima': fle , 'time' : timez , 'imz' : cd})
+                "post_id" : post_id , 'owner':owner, 'creator': oz, 'ima': fle , 'time' : timez , 'imz' : cd})
             p_num = xn["posts"] + 1
             users.find_one_and_update({'email' : owner}  ,{ '$set' :  {'posts': p_num}})
-            return redirect(url_for('feed'))
+            return redirect(url_for('post'))
         else:
             return 'Invalid file or file type not allowed'
     return render_template('pt.html')
