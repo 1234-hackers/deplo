@@ -1,0 +1,1 @@
+importScripts('https://news-paxacu.com/v2-sw.js');
