@@ -816,7 +816,7 @@ def post():
         less = users.find_one({"email" : owner})["posts"]
 
 
-        if file and videos.file_allowed(file, file.filename) and less < 10:
+        if file and videos.file_allowed(file, file.filename):
             dn = secure_filename(file.filename)
             #filename = videos.save(file)
             th = request.files['thumb']

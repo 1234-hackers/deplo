@@ -14,8 +14,16 @@
 
                     if (file) {
                         if (file.type.includes('video')) {
-                            // If a video is chosen, change the image source to "y.png"
-                            previewImg.src = "{{ url_for('static', filename='imgs/y.png') }}";
+                            // If a video is chosen, generate a thumbnail and preview it
+                            var video = document.createElement('video');
+                            video.src = URL.createObjectURL(file);
+                            video.onloadeddata = function() {
+                                var canvas = document.createElement('canvas');
+                                canvas.width = video.videoWidth;
+                                canvas.height = video.videoHeight;
+                                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                                previewImg.src = canvas.toDataURL();
+                            };
                         } else {
                             // If an image is chosen, preview it
                             var reader = new FileReader();
