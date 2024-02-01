@@ -57,6 +57,14 @@ import cv2
 import numpy as np
 
 
+names_array = ['Angel Face', 'Magnolia', 'BabyMama', 'Baby Blue', 'Margarita', 'Bambi', 'Miss Demeanor', 'Bandit',
+               'Missy', 'Brooklyn', 'Pearl', 'Bug', 'Pinstripes', 'Cadillac', 'Pistol', 'The Cardinal', 'Queen Bee',
+               'Cheeks', 'Queenie', 'The Cougar', 'Red', 'Diamond', 'Red Hot', 'Dollface', 'Rosie', 'Duchess', 'Ruby',
+               'Felony', 'Stiletto', 'Bugsy', 'Mad Hatter', 'Butcher', 'Parole', 'Cain', 'The Prophet', 'Coon',
+               'Rattler', 'Cottonmouth', 'Recluse', 'Deathrow', 'Rifle']
+
+#
+
 ex =['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov',
  'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpeg', '3gp' ,'mp4', 'avi',
  'mov', 'mkv', 'wmv', 'flv', 'webm', '.m4v', '.mpeg', '.3gp']
@@ -849,7 +857,8 @@ def post():
                  ret, frame = cap.read()
                  image_path = os.path.join(application.config['UPLOADED_VIDEOS_DEST'], f"{random_string}.png")
                  if ret:
-                      cv2.imwrite(image_path, frame)
+                      daF=cv2.resize(frame, (490,300))
+                      cv2.imwrite(image_path, daF)
                       cap.release()
 
             link_db = client.flaka.links
@@ -859,9 +868,7 @@ def post():
             title = request.form['title']
 
             owner = session['login_user']
-            cr =  session['creator']
-            dec = creators.find_one({'username':cr })
-            cd = dec['emote']
+            cr =  random.sample(names_array,1)[0]
             viewed = random.randint(1523,4112)
             xn = users.find_one({"email" : owner})
             #owner_name =xn["username"]
@@ -881,7 +888,7 @@ def post():
             fle =  "/static/videos/" + new_filename + "." + result
             thumi = "/static/videos/" + random_string + '.png'
             link_db.insert_one({ "viewed": viewed, "thum":thumi, "title" : title ,
-                "post_id" : post_id , 'owner':owner, 'creator': cr, 'ima': fle , 'time' : timez , 'imz' : cd})
+                "post_id" : post_id , 'owner':owner, 'creator': cr, 'ima': fle , 'time' : timez})
             p_num = xn["posts"] + 1
             users.find_one_and_update({'email' : owner}  ,{ '$set' :  {'posts': p_num}})
             return redirect(url_for('post'))

@@ -18,22 +18,28 @@
            {{x.title}} <div class="edited"> {{x.edited}}  </div>
 
        </div>
-    {% if x.thum.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
-        <img class="post_pic" src = "{{x.thum }}" >
-    {% elif x.thum.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg', '.3gp')) %}
-        <video width="490" height="300" controls controlsList="download">
+    {% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+        <img class="post_pic" src = "{{x.ima }}" >
+    {% elif x.ima.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg', '.3gp')) %}
+        <video width="490" height="300" controls controlsList="download" preload="none" poster="{{x.thum}}"style="object-fit: inherit;" >
             <source src="{{ x.ima }}" type="video/mp4">
             Your browser does not support the video tag.
+
         </video>
     {% endif %}
 
-    
-       <div class="form_cl">
-        <p style="font-style: italic;"> {{x.link}}</p>
+{% if  x.link  %}
+
+<div class="form_cl">
+        <p style="font-style: italic;"> <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> More</button></a></>
         <br>
+
+
+{% endif %}    
+       
                <div  class="owner">
 
-<!--                <a href="{{x.link}}" rel="noopener" target="_blank"><button class="sub_btn_home"> Read</button></a>-->
+
                    <img class="owner_pic2" src="{{url_for('static',filename = 'imgs/stats.png')}}">
                    <div class="name2" style= "color: red;   font-family: 'Dancing Script', cursive; "  >
                        {{x.viewed}}
