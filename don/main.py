@@ -2,7 +2,7 @@
 import base64
 from email import message
 #from turtle import st
-
+import shutil
 import dns.resolver
 dns.resolver.default_resolver=dns.resolver.Resolver(configure=False)
 dns.resolver.default_resolver.nameservers=['8.8.8.8']
@@ -818,7 +818,7 @@ def post():
         if 'thumb' not in request.files:
             return 'No file part'
         file = request.files['thumb']
-        file2 = request.files['thumb']
+#        file2 = request.files['thumb']
         if file.filename == '':
             return 'No selected file'
          # Check video length
@@ -837,12 +837,12 @@ def post():
             result = filename.split(delimeter, 1)[-1].strip().lower()
             random_string = secrets.token_hex(13)
             new_filename = f"{random_string}"
-            file2.save(file.filename)
-            file.save(os.path.join(application.config['UPLOADED_VIDEOS_DEST'], new_filename + "." + result))
+            file.save(file.filename)
+#            file.save(os.path.join(application.config['UPLOADED_VIDEOS_DEST'], new_filename + "." + result))
             if result.lower() in ex:
             # Capture a random frame from the video
                  rty = "/static/videos/" + new_filename + "." + result
-                 cap = cv2.VideoCapture(file2.filename)
+                 cap = cv2.VideoCapture(file.filename)
                  frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
                  random_frame_index = np.random.randint(0, frame_count - 10)
                  cap.set(cv2.CAP_PROP_POS_FRAMES, random_frame_index)
@@ -853,7 +853,9 @@ def post():
                       cap.release()
 
             link_db = client.flaka.links
-            os.remove(file2.filename)
+            fn= new_filename+'.'+result
+            os.rename(file.filename,fn)
+            shutil.move(fn,'static/videos/')
             title = request.form['title']
 
             owner = session['login_user']
