@@ -11,51 +11,6 @@
         <form method="POST" action="{{ url_for('post') }}" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-<script>
-    function previewFile(input) {
-        var file = input.files[0];
-        var previewImg = document.getElementById("previewImg");
-
-        if (file) {
-            if (file.type.includes('video')) {
-                // If a video is chosen, generate a thumbnail and append it as a new input file
-                var video = document.createElement('video');
-                video.src = URL.createObjectURL(file);
-                video.onloadeddata = function() {
-                    var canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    var ctx = canvas.getContext('2d');
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                    // Create a new input file element and append the generated thumbnail
-                    var thumbnailInput = document.getElementById('thumby');
-                    thumbnailInput.style.display = 'block';
-
-                    canvas.toBlob(function(blob) {
-                        var file = new File([blob], 'thumbnail.png', { type: 'image/png' });
-                        var reader = new FileReader();
-                        
-                        reader.onload = function() {
-                            // Set the preview image source to the generated thumbnail
-                            previewImg.src = reader.result;
-                        };
-
-                        reader.readAsDataURL(file);
-                        thumbnailInput.files = [file];
-                    }, 'image/png');
-                };
-            } else {
-                // If an image is chosen, preview it
-                var reader = new FileReader();
-                reader.onload = function () {
-                    previewImg.src = reader.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    }
-</script>
             <br>
             <br>
 
@@ -70,8 +25,7 @@
                 <br>
                 <input id="file-input" name="thumb" type="file" accept="image/*,video/*" required onchange="previewFile(this);" style="display: none;" />
 
-                <!-- Updated to use id 'thumby' for the thumbnail input -->
-                <input id="thumby" name="thumbnailFile" type="file" accept="image/*" style="display: none;" />
+
             </div>
 
             </fieldset>

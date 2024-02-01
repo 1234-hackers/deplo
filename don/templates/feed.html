@@ -18,9 +18,9 @@
            {{x.title}} <div class="edited"> {{x.edited}}  </div>
 
        </div>
-    {% if x.ima.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
+    {% if x.thum.endswith(('.jpg', '.jpeg', '.png', '.gif')) %}
         <img class="post_pic" src = "{{x.ima }}" >
-    {% elif x.ima.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg', '.3gp')) %}
+    {% elif x.thum.endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm', '.m4v', '.mpeg', '.3gp')) %}
         <video width="490" height="300" controls controlsList="download">
             <source src="{{ x.ima }}" type="video/mp4">
             Your browser does not support the video tag.

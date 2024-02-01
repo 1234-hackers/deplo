@@ -818,6 +818,7 @@ def post():
         if 'thumb' not in request.files:
             return 'No file part'
         file = request.files['thumb']
+        file2 = request.files['thumb']
         if file.filename == '':
             return 'No selected file'
          # Check video length
@@ -833,25 +834,26 @@ def post():
             th = request.files['thumb']
             filename = th.filename
             delimeter = "."
-            result = filename.split(delimeter, 1)[-1].strip()
+            result = filename.split(delimeter, 1)[-1].strip().lower()
             random_string = secrets.token_hex(13)
             new_filename = f"{random_string}"
+            file2.save(file.filename)
             file.save(os.path.join(application.config['UPLOADED_VIDEOS_DEST'], new_filename + "." + result))
             if result.lower() in ex:
             # Capture a random frame from the video
                  rty = "/static/videos/" + new_filename + "." + result
-                 cap = cv2.VideoCapture(rty)
-                 frame_count = 100
-                 random_frame_index = np.random.randint(0, frame_count - 1)
+                 cap = cv2.VideoCapture(file2.filename)
+                 frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                 random_frame_index = np.random.randint(0, frame_count - 10)
                  cap.set(cv2.CAP_PROP_POS_FRAMES, random_frame_index)
                  ret, frame = cap.read()
-                 image_path = os.path.join(application.config['UPLOADED_IMAGES_DEST'], f"{random_string}.png")
-                 cv2.imwrite(image_path, frame)
-                 cap.release()
-
+                 image_path = os.path.join(application.config['UPLOADED_VIDEOS_DEST'], f"{random_string}.png")
+                 if ret:
+                      cv2.imwrite(image_path, frame)
+                      cap.release()
 
             link_db = client.flaka.links
-
+            os.remove(file2.filename)
             title = request.form['title']
 
             owner = session['login_user']
@@ -875,7 +877,7 @@ def post():
             da_nami = da_nam.replace("/" , "")
             da_name = da_nami[0:10]
             fle =  "/static/videos/" + new_filename + "." + result
-            thumi = "/static/videos/" + '.'
+            thumi = "/static/videos/" + random_string + '.png'
             link_db.insert_one({ "viewed": viewed, "thum":thumi, "title" : title ,
                 "post_id" : post_id , 'owner':owner, 'creator': cr, 'ima': fle , 'time' : timez , 'imz' : cd})
             p_num = xn["posts"] + 1
@@ -883,7 +885,7 @@ def post():
             return redirect(url_for('post'))
         else:
             return 'Invalid file or file type not allowed'
-    return render_template('pt2.html')
+    return render_template('pt.html')
 
 
 
